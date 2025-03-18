@@ -1,0 +1,22 @@
+{
+  "name": "alquicar-backend",
+  "version": "1.0.0",
+  "description": "Backend AlquiCar",
+  "main": "App.js",
+  "scripts": {
+    "test": "run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RiPuAj/alquicar-backend.git"
+  },
+  "author": "Grupo 8",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RiPuAj/alquicar-backend/issues"
+  },
+  "homepage": "https://github.com/RiPuAj/alquicar-backend#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
