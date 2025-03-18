@@ -2,8 +2,10 @@
   "name": "alquicar-backend",
   "version": "1.0.0",
   "description": "Backend AlquiCar",
-  "main": "App.js",
+  "main": "app.js",
+  "type": "module",
   "scripts": {
+    "dev": "nodemon app.js",
     "test": "run test"
   },
   "repository": {
@@ -18,5 +20,8 @@
   "homepage": "https://github.com/RiPuAj/alquicar-backend#readme",
   "dependencies": {
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
