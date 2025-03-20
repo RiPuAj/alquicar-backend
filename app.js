@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { userRouter } from './routes/users.js';
+import { createUserRouter } from './routes/users.js';
+import { UserModel } from './models/mysql/users.js';
 
 
 dotenv.config({path: './.env'});
@@ -9,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.disable('x-powered-by');
 
-app.use('/users', userRouter);
+app.use('/users', createUserRouter({userModel: UserModel}));
 
 
 app.use((req, res) => {
