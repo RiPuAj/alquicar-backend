@@ -1,1 +1,53 @@
-GET http://localhost:3000/
+###
+GET http://localhost:3000/users
+
+###
+GET http://localhost:3000/users/123e4567-e89b-12d3-a456-426614174000
+
+###
+GET http://localhost:3000/users/123e4567-e89b-12d3-a456-426614194000
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Javier Pulido",
+  "email": "jaasl@gmail.com",
+  "password": "12345678",
+  "phone": "123443789",
+  "rol": "admin",
+  "address":"MICASA",
+  "dni": "02322429B"
+}
+
+
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "id" : "345e4567-e89b-12d3-a456-426614174422",  
+  "name": "Javier Pulido",
+  "email": "jaaadsfsl@gmail.com",
+  "password": "12345678",
+  "phone": "123423009",
+  "rol": "user",
+  "address":"MICASA",
+  "dni": "02342422B"
+}
+
+###
+PATCH http://localhost:3000/users/234e4567-e89b-12d3-a456-426614174111
+Content-Type: application/json
+
+{
+  "name": "Nicolas",
+  "dni": "04325549B",
+  "rol": "user"
+}
+
+###
+DELETE http://localhost:3000/users/123e4567-e89b-12d3-a456-426614174000
+
