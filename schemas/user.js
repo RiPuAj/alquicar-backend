@@ -5,9 +5,6 @@ const dniRegex = /^[0-9]{8}[A-Za-z]$/;
 const phoneRegex = /^[0-9]{9}$/;
 
 const userSchema = z.object({
-    id: z.string().uuid({
-        invalid_type_error: 'ID must be a valid UUID',
-    }).optional(),
     
     name: z.string({
         invalid_type_error: 'Name must be a string',
@@ -35,7 +32,7 @@ const userSchema = z.object({
         invalid_phone_error: 'Phone must be a valid phone number',
     }).regex(phoneRegex),
     
-    rol: z.enum(['admin', 'user']),
+    role: z.enum(['admin', 'user']),
     dni: z.string().regex(dniRegex),
 });
 

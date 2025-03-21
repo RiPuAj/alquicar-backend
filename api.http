@@ -13,12 +13,12 @@ Content-Type: application/json
 
 {
   "name": "Javier Pulido",
-  "email": "jaasl@gmail.com",
+  "email": "jaasdlssas@gmail.com",
   "password": "12345678",
-  "phone": "123443789",
-  "rol": "admin",
+  "phone": "123343789",
+  "role": "admin",
   "address":"MICASA",
-  "dni": "02322429B"
+  "dni": "02322329B"
 }
 
 
@@ -33,7 +33,7 @@ Content-Type: application/json
   "email": "jaaadsfsl@gmail.com",
   "password": "12345678",
   "phone": "123423009",
-  "rol": "user",
+  "role": "user",
   "address":"MICASA",
   "dni": "02342422B"
 }
@@ -45,7 +45,7 @@ Content-Type: application/json
 {
   "name": "Nicolas",
   "dni": "04325549B",
-  "rol": "user"
+  "role": "user"
 }
 
 ###

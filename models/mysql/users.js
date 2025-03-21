@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import { handlerDatabaseError } from '../../errors.js';
 
 dotenv.config();
 
@@ -19,12 +20,13 @@ export class UserModel{
 
         try{
 
-            const [users, tableInfo] = await conn.query('SELECT BIN_TO_UUID(id) id, name, email, address, phone, rol, dni FROM users');
+            const [users, tableInfo] = await conn.query('SELECT BIN_TO_UUID(id) id, name, email, address, phone, role, dni FROM users');
             return users;
 
         }catch(e){
             // TODO Manejar error
             console.log(e);
+            throw new DatabaseError('Error getting all users');
         }
 
         
@@ -35,12 +37,13 @@ export class UserModel{
         try{
 
             const [user, tableInfo] = await conn.query(
-                'SELECT BIN_TO_UUID(id) id, name, email, address, phone, rol, dni FROM users WHERE id = UUID_TO_BIN(?)', [id]);
+                'SELECT BIN_TO_UUID(id) id, name, email, address, phone, role, dni FROM users WHERE id = UUID_TO_BIN(?)', [id]);
             return user;
 
         }catch(e){
             // TODO Manejar error
             console.log(e);
+            throw new DatabaseError('Error getting user');
         }
 
         
@@ -62,7 +65,7 @@ export class UserModel{
             password,
             address,
             phone,
-            rol,
+            role,
             dni
         } = input;
     
@@ -76,15 +79,15 @@ export class UserModel{
 
         try{
             await conn.query(`
-                INSERT INTO users (id, name, email, password, address, phone, rol, dni)
-                VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?)`, [id, name, email, password, address, phone, rol, dni]);
+                INSERT INTO users (id, name, email, password, address, phone, role, dni)
+                VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?)`, [id, name, email, password, address, phone, role, dni]);
             
             return {success: true, message: 'User created', id};
 
         } catch(e){
-            console.log(e);
+            console.log(e.code);
             //TODO: manejar error
-            return {success: false, message: 'Error in user creation'}; 
+            handlerDatabaseError({err: e});            
         }
         
     }
@@ -105,6 +108,7 @@ export class UserModel{
                 `UPDATE users SET ${updates} WHERE id = UUID_TO_BIN(?)`, [...values, id]);
         }catch(e){
             console.log(e);
+            handlerDatabaseError({err: {message: 'Error updating user'}});
             //TODO: manejar error
         } 
         
@@ -122,7 +126,7 @@ export class UserModel{
         
         } catch(e){
             // TODO Manejar error
-            console.log(e);
+            handlerDatabaseError({err: {message: 'Error deleting user'}});
         }
 
     }
