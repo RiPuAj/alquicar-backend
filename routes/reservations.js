@@ -1,0 +1,20 @@
+import { Router } from "express";
+import { ReservationController } from "../controllers/reservations.js";
+
+export const createReservationRouter = ({reservationModel}) => {
+
+    console.log("Reservation router initialized");
+
+    const reservationRouter = Router();
+    const reservationController = new ReservationController({reservationModel});
+
+    reservationRouter.get("/", reservationController.getAll);
+    reservationRouter.get("/:id", reservationController.getById);
+    reservationRouter.post("/", reservationController.create);
+    reservationRouter.patch("/:id", reservationController.update);
+    reservationRouter.delete("/:id", reservationController.delete);
+
+    
+
+    return reservationRouter;
+};
