@@ -18,7 +18,7 @@ export class ReservationModel{
     static async getAll(){
         try{
 
-            const [reservations, tableInfo] = await conn.query('SELECT id, vehicle_id, customer_id, start_date, end_date, total_price, status, created_at FROM reservations');
+            const [reservations, tableInfo] = await conn.query('SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations');
             return reservations;
 
         }catch(e){
@@ -33,7 +33,7 @@ export class ReservationModel{
             try{
     
                 const [reservation, tableInfo] = await conn.query(
-                    'SELECT id, vehicle_id, customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE id = ?', [id]);
+                    'SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE id = ?', [id]);
                 return reservation;
     
             }catch(e){
@@ -76,7 +76,7 @@ export class ReservationModel{
             try{
                 await conn.query(`
                     INSERT INTO reservations (id, vehicle_id, customer_id, start_date, end_date, total_price, status, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [id, vehicle_id, customer_id, start_date, end_date, total_price, status, created_at]);
+                    VALUES (?, ?, BIN_TO_UUID(?), ?, ?, ?, ?, ?)`, [id, vehicle_id, customer_id, start_date, end_date, total_price, status, created_at]);
                 
                 return {success: true, message: 'reservation created', id};
     
