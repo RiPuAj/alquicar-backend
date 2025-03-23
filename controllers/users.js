@@ -1,4 +1,5 @@
 import { validateUser, validatePartialUser } from '../schemas/user.js';
+import { DatabaseError } from '../errors/database-error.js';
 
 export class UserController {
 
