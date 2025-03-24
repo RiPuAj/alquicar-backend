@@ -82,7 +82,7 @@ export class ReservationModel {
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            throw new DatabaseError(e.message);
+            handlerDatabaseError({error: e});
         }
     }
 
@@ -95,7 +95,7 @@ export class ReservationModel {
         }
 
         // Campos que no se pueden modificar
-        if(input.id || input.vehicle_id || input.customer_id) handlerDatabaseError(new DatabaseError('Cannot update id, vehicle_id or customer_id'));
+        if(input.id || input.vehicle_id || input.customer_id) handlerDatabaseError({error: new DatabaseError('Cannot update id, vehicle_id or customer_id')});
 
         const fields = Object.keys(input);
         const values = Object.values(input);
@@ -128,6 +128,8 @@ export class ReservationModel {
     static async getReservationsByVehicle({ idVehicle }) {
         
         try {
+            if(!(await existVehicle({ idVehicle }))) handlerDatabaseError({error: new DatabaseError('Vehicle does not exist')});
+            
             const [reservations, tableInfo] = await conn.query(
                 'SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE vehicle_id = ?', [idVehicle]);
             return reservations;
@@ -141,6 +143,8 @@ export class ReservationModel {
     static async getReservationsByCustomer({ idCustomer }) {
         
         try {
+            if(!(await existCustomer({ idCustomer }))) handlerDatabaseError({error: new DatabaseError('Customer does not exist')});
+
             const [reservations, tableInfo] = await conn.query(
                 'SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE customer_id = UUID_TO_BIN(?)', [idCustomer]);
             return reservations;
