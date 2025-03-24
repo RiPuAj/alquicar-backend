@@ -6,8 +6,9 @@ export class DatabaseError extends Error {
 }
 
 export const handlerDatabaseError = ({ error }) => {
-
-  if (error.code === 'ER_DUP_ENTRY') {
+  if (error instanceof DatabaseError) {
+    throw error;
+  } else if (error.code === 'ER_DUP_ENTRY') {
     if (error.message.includes('users.email')) {
       throw new DatabaseError('Email already in use');
 
@@ -17,7 +18,7 @@ export const handlerDatabaseError = ({ error }) => {
     } else if (error.message.includes('users.phone')) {
       throw new DatabaseError('Phone already in use');
     } else {
-      throw new DatabaseError(error.message);
+      throw new DatabaseError('Error en la base de datos');
     }
   } else if (error.code === 'ER_NO_REFERENCED_ROW_2') {
     if (error.sqlMessage.includes('vehicle_id')) {
@@ -25,7 +26,5 @@ export const handlerDatabaseError = ({ error }) => {
     } else if (error.sqlMessage.includes('customer_id')) {
       throw new DatabaseError('Customer not found');
     }
-  } else if (error instanceof DatabaseError) {
-    throw error;
   }
 }

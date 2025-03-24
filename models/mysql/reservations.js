@@ -27,7 +27,7 @@ export class ReservationModel {
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            throw new DatabaseError('Error getting all users');
+            handlerDatabaseError({error: new DatabaseError('Error getting all users')});
         }
     }
 
