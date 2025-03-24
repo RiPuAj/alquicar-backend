@@ -98,4 +98,32 @@ export class ReservationController {
         }
     }
 
+    getByVehicleId = async (req, res) => {
+        const { id } = req.params;
+        try {
+            const reservationModel = await this.reservationModel.getReservationsByVehicle({ idVehicle: id });
+            return res.json(reservationModel);
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                console.log("ERROR DE VALIDACION")
+            } else if (error instanceof DatabaseError) {
+                console.log("ERROR DE BASE DE DATOS")
+            }
+        }
+    }
+
+    getByCustomerId = async (req, res) => {
+        const { id } = req.params;
+        try {
+            const reservationModel = await this.reservationModel.getReservationsByCustomer({ idCustomer: id });
+            return res.json(reservationModel);
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                console.log("ERROR DE VALIDACION")
+            } else if (error instanceof DatabaseError) {
+                console.log("ERROR DE BASE DE DATOS")
+            }
+        }
+    }
+
 }

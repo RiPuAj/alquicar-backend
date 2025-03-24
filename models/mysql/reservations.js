@@ -32,6 +32,7 @@ export class ReservationModel {
     }
 
     static async getById({ id }) {
+
         try {
 
             const [reservation, tableInfo] = await conn.query(
@@ -117,6 +118,32 @@ export class ReservationModel {
             const [result] = await conn.query('DELETE FROM reservations WHERE id = ?', [id]);
             console.log(result);
             return result;
+
+        } catch (e) {
+            // TODO Manejar error
+            handlerDatabaseError({ err: e });
+        }
+    }
+
+    static async getReservationsByVehicle({ idVehicle }) {
+        
+        try {
+            const [reservations, tableInfo] = await conn.query(
+                'SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE vehicle_id = ?', [idVehicle]);
+            return reservations;
+
+        } catch (e) {
+            // TODO Manejar error
+            handlerDatabaseError({ err: e });
+        }
+    }
+
+    static async getReservationsByCustomer({ idCustomer }) {
+        
+        try {
+            const [reservations, tableInfo] = await conn.query(
+                'SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE customer_id = UUID_TO_BIN(?)', [idCustomer]);
+            return reservations;
 
         } catch (e) {
             // TODO Manejar error

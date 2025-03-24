@@ -58,6 +58,9 @@ GET http://localhost:3000/reservations
 ###
 GET http://localhost:3000/reservations/2
 
+###
+GET http://localhost:3000/reservations/SELECT * FROM reservations	
+
 ### 
 POST http://localhost:3000/reservations
 Content-Type: application/json
@@ -107,3 +110,9 @@ GET http://localhost:3000/reservations/4
 
 ###
 DELETE http://localhost:3000/reservations/4
+
+###
+GET http://localhost:3000/reservations/vehicle/2
+
+###
+GET http://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111

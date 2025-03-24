@@ -11,6 +11,8 @@ export const createReservationRouter = ({reservationModel}) => {
     reservationRouter.post("/", reservationController.create);
     reservationRouter.patch("/:id", reservationController.update);
     reservationRouter.delete("/:id", reservationController.delete);
+    reservationRouter.get("/vehicle/:id", reservationController.getByVehicleId);
+    reservationRouter.get("/customer/:id", reservationController.getByCustomerId);  
     
     return reservationRouter;
 }
