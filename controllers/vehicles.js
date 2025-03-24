@@ -42,10 +42,12 @@ export class VehicleController {
             return res.status(400).json({ error: JSON.parse(vehicle.error.message) });
         }
         const newVehicle = await this.vehicleModel.create({ input: vehicle.data });
+        console.log('CONTROLLER', newVehicle)
         if (!newVehicle.success) {
             return res.status(400).json({ error: newVehicle.message });
         }
-        res.status(201).json(newVehicle);
+        return res.status(201).json(newVehicle);
+
     }
 
     update = async (req, res) => {
