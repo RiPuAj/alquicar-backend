@@ -1,9 +1,10 @@
-import { VehiclesController } from "../controllers/vehicles.js";
+import { Router } from "express";
+import { VehicleController } from "../controllers/vehicles.js";
 
-export const createVehicleRouter = ({ vehiclesModel }) => {
+export const createVehicleRouter = ({ vehicleModel }) => {
 
     const vehicleRouter = Router();
-    const vehicleController = new VehiclesController({ vehiclesModel });
+    const vehicleController = new VehicleController({ vehicleModel });
 
     vehicleRouter.get("/", vehicleController.getAll);
     vehicleRouter.get("/:id", vehicleController.getById);
@@ -13,5 +14,5 @@ export const createVehicleRouter = ({ vehiclesModel }) => {
 
     
 
-    return vehicleController;
+    return vehicleRouter;
 };
