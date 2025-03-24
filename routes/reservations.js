@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { ReservationController } from '../controllers/reservations.js';
 
-export const createReservationRouter = ({reservationModel}) => {
-    
+export const createReservationRouter = ({ reservationModel }) => {
+
     const reservationRouter = Router();
-    const reservationController = new ReservationController({reservationModel});
+    const reservationController = new ReservationController({ reservationModel });
 
     reservationRouter.get("/", reservationController.getAll);
     reservationRouter.get("/:id", reservationController.getById);
@@ -12,7 +12,7 @@ export const createReservationRouter = ({reservationModel}) => {
     reservationRouter.patch("/:id", reservationController.update);
     reservationRouter.delete("/:id", reservationController.delete);
     reservationRouter.get("/vehicle/:id", reservationController.getByVehicleId);
-    reservationRouter.get("/customer/:id", reservationController.getByCustomerId);  
-    
+    reservationRouter.get("/customer/:id", reservationController.getByCustomerId);
+
     return reservationRouter;
 }

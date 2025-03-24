@@ -69,9 +69,9 @@ export class ReservationModel {
 
         try {
             // Verificar si el vehículo y el usuario que alquila existe
-            if(!(await existVehicle({ idVehicle: vehicle_id }))) handlerDatabaseError({ message: 'Vehicle does not exist' });
-            if(!(await existCustomer({ idCustomer: customer_id }))) handlerDatabaseError({ message: 'Customer does not exist' });
-            if(!(await freeVehicleByDates({ idVehicle: vehicle_id, startDate: start_date, endDate: end_date }))) handlerDatabaseError({ message: 'Vehicle is busy' });
+            if(!(await existVehicle({ idVehicle: vehicle_id }))) handlerDatabaseError({error: new DatabaseError('Vehicle does not exist')});
+            if(!(await existCustomer({ idCustomer: customer_id }))) handlerDatabaseError({error: new DatabaseError('Customer does not exist')});
+            if(!(await freeVehicleByDates({ idVehicle: vehicle_id, startDate: start_date, endDate: end_date }))) handlerDatabaseError({error: new DatabaseError('Vehicle is busy')});
          
             const [result] = await conn.query(
                 'INSERT INTO reservations (vehicle_id, customer_id, start_date, end_date, total_price, status) VALUES (?, UUID_TO_BIN(?), ?, ?, ?, ?)',
@@ -95,7 +95,7 @@ export class ReservationModel {
         }
 
         // Campos que no se pueden modificar
-        if(input.id || input.vehicle_id || input.customer_id) handlerDatabaseError({ message: 'Could not modify all fields' });
+        if(input.id || input.vehicle_id || input.customer_id) handlerDatabaseError(new DatabaseError('Cannot update id, vehicle_id or customer_id'));
 
         const fields = Object.keys(input);
         const values = Object.values(input);
@@ -108,7 +108,7 @@ export class ReservationModel {
 
         } catch (e) {
             // TODO Manejar error
-            handlerDatabaseError({ err: e });
+            handlerDatabaseError({ error: e });
         }
     }
 
@@ -121,7 +121,7 @@ export class ReservationModel {
 
         } catch (e) {
             // TODO Manejar error
-            handlerDatabaseError({ err: e });
+            handlerDatabaseError({ error: e });
         }
     }
 
@@ -134,7 +134,7 @@ export class ReservationModel {
 
         } catch (e) {
             // TODO Manejar error
-            handlerDatabaseError({ err: e });
+            handlerDatabaseError({ error: e });
         }
     }
 
@@ -147,7 +147,7 @@ export class ReservationModel {
 
         } catch (e) {
             // TODO Manejar error
-            handlerDatabaseError({ err: e });
+            handlerDatabaseError({ error: e });
         }
     }
 }

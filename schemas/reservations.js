@@ -12,7 +12,7 @@ export const reservationSchema = z.object({
 // Datetime de ZOD no admite timestamp, por lo que se redefine la función para que acepte timestamps
 const redefineTimestampsToDatetime = (date) => {
     if (!(typeof date === "string")) return date;
-    try{
+    try {
         const parsedDate = new Date(date.replace(" ", "T") + "Z");
         return parsedDate.toISOString();
     } catch (e) {
@@ -43,6 +43,6 @@ export const validatePartialReservation = (reservation) => {
     } else if (reservation.end_date) {
         newReservation.end_date = redefineTimestampsToDatetime(reservation.end_date);
     }
-    
+
     return reservationSchema.partial().safeParse(newReservation);
 }

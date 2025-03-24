@@ -59,7 +59,7 @@ GET http://localhost:3000/reservations
 GET http://localhost:3000/reservations/2
 
 ###
-GET http://localhost:3000/reservations/SELECT * FROM reservations	
+GET http://localhost:3000/reservations/3
 
 ### 
 POST http://localhost:3000/reservations
