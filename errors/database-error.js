@@ -6,6 +6,8 @@ export class DatabaseError extends Error {
   }
 
 export const handlerDatabaseError = ({err, message}) => {
+  if(!err) throw new DatabaseError(message);
+  
   if (err.code === 'ER_DUP_ENTRY') {
     if (err.message.includes('users.email')) {
         throw new DatabaseError('Email already in use');
@@ -25,6 +27,6 @@ export const handlerDatabaseError = ({err, message}) => {
         throw new DatabaseError('Customer not found');
     } 
   } else {
-    throw new DatabaseError(message);
+    throw new DatabaseError(err.message);
   }
 }

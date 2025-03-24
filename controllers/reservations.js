@@ -85,8 +85,9 @@ export class ReservationController {
     }
 
     delete = async (req, res) => {
+        const { id } = req.params;
         try {
-            const reservationModel = await this.reservationModel.delete(req.params.id);
+            const reservationModel = await this.reservationModel.delete({id});
             return res.json(reservationModel);
         } catch (error) {
             if (error instanceof ValidationError) {

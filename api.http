@@ -75,10 +75,10 @@ POST http://localhost:3000/reservations
 Content-Type: application/json
 
 {
-  "vehicle_id":"daasd",
-  "customer_id":"fas",
-  "start_date":232,
-  "end_date":"2023-05-12 09:00:00",
+  "vehicle_id":2,
+  "customer_id":"234e4567-e89b-12d3-a456-426614174111",
+  "start_date":"2023-05-15 09:00:00",
+  "end_date":"2023-05-17 09:00:00",
   "total_price":50.00
 
 }
@@ -89,9 +89,21 @@ Content-Type: application/json
 
 {
   "status": "cancelled",
-  "total_price": 60.50,
-  "customer_id": 20
+  "total_price": 60.50
+}
+
+###
+PATCH http://localhost:3000/reservations/4
+Content-Type: application/json
+
+{
+  "id" : 4,
+  "status": "cancelled",
+  "total_price": 60.50
 }
 
 ###
 GET http://localhost:3000/reservations/4
+
+###
+DELETE http://localhost:3000/reservations/4

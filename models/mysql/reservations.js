@@ -54,28 +54,24 @@ export class ReservationModel {
             throw new ValidationError(reservationValidation.error);
         }
 
-        const { 
+
+        if (!input.status) input.status = 'Pending';
+
+        const {
             vehicle_id,
-            customer_id, 
-            start_date, 
-            end_date, 
-            total_price, 
-            status 
+            customer_id,
+            start_date,
+            end_date,
+            total_price,
+            status
         } = input;
 
         try {
             // Verificar si el vehículo y el usuario que alquila existe
-            const existVehicleAndCustomer = await conn.query(
-                'SELECT EXISTS(SELECT 1 FROM vehicles WHERE id = ?) AS vehicle_exists,' +
-                'EXISTS(SELECT 1 FROM users WHERE id = UUID_TO_BIN(?)) AS customer_exists',
-                [vehicle_id, customer_id]);
-
-            if (!existVehicleAndCustomer[0][0].vehicle_exists) {
-                throw new ValidationError('Vehicle does not exist');
-            } else if (!existVehicleAndCustomer[0][0].customer_exists) {
-                throw new ValidationError('Customer does not exist');
-            }
-
+            if(!(await existVehicle({ idVehicle: vehicle_id }))) handlerDatabaseError({ message: 'Vehicle does not exist' });
+            if(!(await existCustomer({ idCustomer: customer_id }))) handlerDatabaseError({ message: 'Customer does not exist' });
+            if(!(await freeVehicleByDates({ idVehicle: vehicle_id, startDate: start_date, endDate: end_date }))) handlerDatabaseError({ message: 'Vehicle is busy' });
+         
             const [result] = await conn.query(
                 'INSERT INTO reservations (vehicle_id, customer_id, start_date, end_date, total_price, status) VALUES (?, UUID_TO_BIN(?), ?, ?, ?, ?)',
                 [vehicle_id, customer_id, start_date, end_date, total_price, status]
@@ -84,7 +80,8 @@ export class ReservationModel {
 
         } catch (e) {
             // TODO Manejar error
-            throw new DatabaseError('Error creating reservation');
+            console.log(e);
+            throw new DatabaseError(e.message);
         }
     }
 
@@ -93,14 +90,15 @@ export class ReservationModel {
 
         if (!reservationValidation.success) {
             //TODO ERROR HANDLING
-            console.log(reservationValidation.error);
             throw new ValidationError(reservationValidation.error);
         }
+
+        // Campos que no se pueden modificar
+        if(input.id || input.vehicle_id || input.customer_id) handlerDatabaseError({ message: 'Could not modify all fields' });
 
         const fields = Object.keys(input);
         const values = Object.values(input);
         const updates = fields.map((field, index) => `${field} = ?`).join(', ');
-        console.log(input);
 
         try {
             const [result] = await conn.query(
@@ -114,23 +112,39 @@ export class ReservationModel {
     }
 
     static async delete({ id }) {
-    }
 
-    existVehicle = async ({ idVehicle }) => {
         try {
-            const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM vehicles WHERE id = ?) AS vehicle_exists', [idVehicle]);
-            return result[0].vehicle_exists === 1 ? true : false;
+            const [result] = await conn.query('DELETE FROM reservations WHERE id = ?', [id]);
+            console.log(result);
+            return result;
+
         } catch (e) {
-            throw new DatabaseError('Vehicle does not exist');
+            // TODO Manejar error
+            handlerDatabaseError({ err: e });
         }
     }
+}
 
-    existCustomer = async ({ idCustomer }) => {
-        try {
-            const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM users WHERE id = UUID_TO_BIN(?)) AS customer_exists', [idCustomer]);
-            return result[0].customer_exists === 1 ? true : false;
-        } catch (e) {
-            throw new DatabaseError('Customer does not exist');
-        }
-    }
+async function existVehicle({ idVehicle }) {
+
+    const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM vehicles WHERE id = ?) AS vehicle_exists', [idVehicle]);
+    return result[0].vehicle_exists === 1 ? true : false;
+
+}
+
+async function existCustomer({ idCustomer }) {
+
+    const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM users WHERE id = UUID_TO_BIN(?)) AS customer_exists', [idCustomer]);
+    return result[0].customer_exists === 1 ? true : false;
+
+}
+
+async function freeVehicleByDates({ idVehicle, startDate, endDate }) {
+
+    const [result] = await conn.query(
+        'SELECT EXISTS(SELECT 1 FROM reservations WHERE vehicle_id = ? AND ((start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?))) AS vehicle_busy',
+        [idVehicle, startDate, endDate, startDate, endDate]);
+
+    return result[0].vehicle_busy === 1 ? false : true;
+
 }
