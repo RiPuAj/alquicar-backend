@@ -72,8 +72,9 @@ export class VehicleModel {
                     daily_price, deposit, availability, registration_date)
                     VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [owner_id, brand_id, model_id, year, type, transmission, fuel_type, capacity, num_doors,
                 daily_price, deposit, availability, registration_date]);
-            console.log(newVehicle)
-            return { success: true, message: 'Vehicle created'};
+            const id = newVehicle[0].insertId;
+            console.log('ID: ' + id)
+            return { success: true, message: 'Vehicle created', id };
 
         } catch (e) {
             console.log(e);
