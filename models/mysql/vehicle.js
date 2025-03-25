@@ -72,8 +72,8 @@ export class VehicleModel {
                     daily_price, deposit, availability, registration_date)
                     VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [owner_id, brand_id, model_id, year, type, transmission, fuel_type, capacity, num_doors,
                 daily_price, deposit, availability, registration_date]);
+            
             const id = newVehicle[0].insertId;
-            console.log('ID: ' + id)
             return { success: true, message: 'Vehicle created', id };
 
         } catch (e) {
@@ -105,4 +105,13 @@ export class VehicleModel {
 
 
     }
+
+    /*
+    static async function existOwner({ owner_id }) {
+
+        const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM users WHERE id = ?) AS owner_exists', [owner_id]);
+        return result[0].owner_exists === 1 ? true : false;
+    
+    }*/
+
 }
