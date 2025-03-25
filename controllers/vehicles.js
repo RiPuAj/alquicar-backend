@@ -42,7 +42,6 @@ export class VehicleController {
             return res.status(400).json({ error: JSON.parse(vehicle.error.message) });
         }
         const newVehicle = await this.vehicleModel.create({ input: vehicle.data });
-        console.log('CONTROLLER', newVehicle)
         if (!newVehicle.success) {
             return res.status(400).json({ error: newVehicle.message });
         }
@@ -66,9 +65,9 @@ export class VehicleController {
     delete = async (req, res) => {
         const { id } = req.params;
         const deletedVehicle = await this.vehicleModel.delete({ id });
-        if (!deletedVehicle.success) {
-            return res.status(400).json({ error: deletedVehicle.message });
+        if (deletedVehicle[0].affectedRows === 0) {
+            return res.status(404).json({ error: 'Vehicle not found' });
         }
-        res.json(deletedVehicle);
+        res.status(201).json({ message: 'Vehicle deleted' });
     }
 }

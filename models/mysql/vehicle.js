@@ -65,6 +65,14 @@ export class VehicleModel {
 
         let { deposit, availability, registration_date } = input;
 
+        const exists = await existOwner(owner_id)
+
+        if(!exists){
+            return {
+                success: false,
+                message: 'Owner Id does not exist'
+            };
+        }
 
         try {
             const newVehicle = await conn.query(`
@@ -72,6 +80,7 @@ export class VehicleModel {
                     daily_price, deposit, availability, registration_date)
                     VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [owner_id, brand_id, model_id, year, type, transmission, fuel_type, capacity, num_doors,
                 daily_price, deposit, availability, registration_date]);
+            
             
             const id = newVehicle[0].insertId;
             return { success: true, message: 'Vehicle created', id };
@@ -88,9 +97,54 @@ export class VehicleModel {
     }
 
 
-    update = async ({ id, input }) => {
-        return await this.database.query('UPDATE vehicles SET ? WHERE id = ?', [input, id]);
-    }
+    static async update({id, input}){
+
+        if(input.owner_id){
+            const exist = await existOwner(input.owner_id)
+            if(!exist){
+                return {
+                    success: false,
+                    message: 'Owner Id does not exist'
+                };
+            }
+        }      
+
+        const fields = Object.keys(input).map(field => 
+            field === "owner_id" ? `${field} = UUID_TO_BIN(?)` : `${field} = ?`
+        );
+        const values = Object.values(input);
+        //const updates = fields.map((field, index) => `${field} = ?`).join(', ');
+
+        if (fields.length === 0) {
+            return {
+                success: false,
+                message: 'No fields provided for update'
+            };
+        }
+    
+        try{
+            const [result] = await conn.query(
+                `UPDATE vehicles SET ${fields.join(', ')} WHERE id = ?`, [...values, id]);
+
+            if (result.affectedRows === 0) {
+                return {
+                    success: false,
+                    message: 'No vehicle found with the given ID'
+                };
+            }
+        }catch(e){
+            console.log(e);
+            return {
+                success: false,
+                message: 'Error updating vehicle'
+            };
+                //handlerDatabaseError({err: {message: 'Error updating vehicle'}});
+        }
+            
+        const vehicleUpdated = await VehicleModel.getById({id});
+        
+        return { success: true, message: 'Vehicle updated', vehicle: vehicleUpdated };
+        }
 
 
     static async delete({id}) {
@@ -98,20 +152,21 @@ export class VehicleModel {
 
             const res = await conn.query('DELETE FROM vehicles WHERE id = ?', [id]);
             return res;
-
+            
         } catch (e) {
+            
             handlerDatabaseError({ err: { message: 'Error deleting vehicle' } });
         }
 
 
     }
 
-    /*
-    static async function existOwner({ owner_id }) {
+}
 
-        const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM users WHERE id = ?) AS owner_exists', [owner_id]);
+
+    async function existOwner(ownerId) {
+
+        const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM users WHERE id = UUID_TO_BIN(?)) AS owner_exists', [ownerId]);
         return result[0].owner_exists === 1 ? true : false;
     
-    }*/
-
-}
+    }
