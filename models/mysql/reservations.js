@@ -82,7 +82,7 @@ export class ReservationModel {
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            throw new DatabaseError(e.message);
+            handlerDatabaseError({error: e});
         }
     }
 
@@ -104,7 +104,10 @@ export class ReservationModel {
         try {
             const [result] = await conn.query(
                 `UPDATE reservations SET ${updates} WHERE id = ?`, [...values, id]);
-            return result;
+            if (result.affectedRows === 0) handlerDatabaseError({error: new DatabaseError('Reservation not found')});
+
+            const reservation = await this.getById({ id });
+            return reservation;
 
         } catch (e) {
             // TODO Manejar error
@@ -116,8 +119,8 @@ export class ReservationModel {
 
         try {
             const [result] = await conn.query('DELETE FROM reservations WHERE id = ?', [id]);
-            console.log(result);
-            return result;
+            
+            return {success: true, message: 'Reservation deleted', id: id};
 
         } catch (e) {
             // TODO Manejar error
