@@ -65,24 +65,52 @@ export class VehicleModel {
 
         let { deposit, availability, registration_date } = input;
 
-        const exists = await existOwner(owner_id)
+        const existsOwner = await existOwner(owner_id);
 
-        if(!exists){
+        if(!existsOwner){
             return {
                 success: false,
                 message: 'Owner Id does not exist'
             };
         }
 
+        const existsModel = await existModel(brand_id, model_id);
+
+        if(!existsModel){
+            return {
+                success: false,
+                message: 'Vehicle model does not exist'
+            };
+        }
+
+        const optionalFields = ["deposit", "availability", "registration_date"];
+        const fields = [
+            "owner_id", "brand_id", "model_id", "year", "type", "transmission",
+            "fuel_type", "capacity", "num_doors", "daily_price"
+        ];
+        const values = [
+            "UUID_TO_BIN(?)", "?", "?", "?", "?", "?",
+            "?", "?", "?", "?"
+        ];
+        const params = [
+            owner_id, brand_id, model_id, year, type, transmission,
+            fuel_type, capacity, num_doors, daily_price
+        ];
+
+        // Agregar los campos opcionales solo si están definidos
+        optionalFields.forEach(field => {
+            if (input[field] !== undefined) {
+                fields.push(field);
+                values.push("?");
+                params.push(input[field]);
+            }
+        });
+
         try {
-            const newVehicle = await conn.query(`
-                    INSERT INTO vehicles (owner_id, brand_id, model_id, year, type, transmission, fuel_type, capacity, num_doors,
-                    daily_price, deposit, availability, registration_date)
-                    VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [owner_id, brand_id, model_id, year, type, transmission, fuel_type, capacity, num_doors,
-                daily_price, deposit, availability, registration_date]);
+            const query = `INSERT INTO vehicles (${fields.join(", ")}) VALUES (${values.join(", ")})`;
+            const [newVehicle] = await conn.query(query, params);
             
-            
-            const id = newVehicle[0].insertId;
+            const id = newVehicle.insertId;
             return { success: true, message: 'Vehicle created', id };
 
         } catch (e) {
@@ -169,4 +197,16 @@ export class VehicleModel {
         const [result] = await conn.query('SELECT EXISTS(SELECT 1 FROM users WHERE id = UUID_TO_BIN(?)) AS owner_exists', [ownerId]);
         return result[0].owner_exists === 1 ? true : false;
     
+    }
+
+    async function existModel(brandId, modelId){
+        const [result] = await conn.query(
+            `SELECT EXISTS(
+                SELECT 1 FROM vehicles_models 
+                WHERE id = ? AND brand_id = ?
+            ) AS model_exists`, 
+            [modelId, brandId]
+        );
+    
+        return result[0].model_exists === 1;
     }
