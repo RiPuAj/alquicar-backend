@@ -1,3 +1,6 @@
+import {DatabaseError } from './database-error.js';
+import { ValidationError } from './validation-error.js';
+
 export const handlerDatabaseError = ({ error }) => {
   if (error instanceof DatabaseError) {
     throw error;
@@ -13,12 +16,16 @@ export const handlerDatabaseError = ({ error }) => {
     } else {
       throw new DatabaseError('Error en la base de datos');
     }
+  
   } else if (error.code === 'ER_NO_REFERENCED_ROW_2') {
     if (error.sqlMessage.includes('vehicle_id')) {
       throw new DatabaseError('Vehicle not found');
     } else if (error.sqlMessage.includes('customer_id')) {
       throw new DatabaseError('Customer not found');
     }
+  } else if (error.code === 'ECONNREFUSED') {
+    throw new DatabaseError('Base de datos no disponible');
+
   }
 }
 

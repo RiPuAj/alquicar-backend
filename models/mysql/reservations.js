@@ -3,8 +3,11 @@ import dotenv from 'dotenv';
 import { validateReservation, validatePartialReservation } from '../../schemas/reservations.js';
 import {handlerDatabaseError } from '../../errors/handler-error.js';
 import { ValidationError } from '../../errors/validation-error.js';
+import { CreateMYSQLConnection } from './mysql-config.js';
 
+/*
 dotenv.config();
+
 
 const config = {
     host: process.env.DB_HOST,
@@ -15,6 +18,9 @@ const config = {
 }
 
 const conn = await mysql.createConnection(config);
+*/
+
+const conn = await CreateMYSQLConnection.getConncetion();
 
 export class ReservationModel {
 
