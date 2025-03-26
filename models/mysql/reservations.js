@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import { validateReservation, validatePartialReservation } from '../../schemas/reservations.js';
-import { DatabaseError, handlerDatabaseError } from '../../errors/database-error.js';
+import {handlerDatabaseError } from '../../errors/handler-error.js';
 import { ValidationError } from '../../errors/validation-error.js';
 
 dotenv.config();
