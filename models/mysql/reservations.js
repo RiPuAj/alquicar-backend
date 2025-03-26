@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import { validateReservation, validatePartialReservation } from '../../schemas/reservations.js';
-import { DatabaseError, handlerDatabaseError } from '../../errors/database-error.js';
+import {handlerDatabaseError } from '../../errors/handler-error.js';
 import { ValidationError } from '../../errors/validation-error.js';
 
 dotenv.config();
@@ -104,7 +104,10 @@ export class ReservationModel {
         try {
             const [result] = await conn.query(
                 `UPDATE reservations SET ${updates} WHERE id = ?`, [...values, id]);
-            return result;
+            if (result.affectedRows === 0) handlerDatabaseError({error: new DatabaseError('Reservation not found')});
+
+            const reservation = await this.getById({ id });
+            return reservation;
 
         } catch (e) {
             // TODO Manejar error
@@ -116,8 +119,8 @@ export class ReservationModel {
 
         try {
             const [result] = await conn.query('DELETE FROM reservations WHERE id = ?', [id]);
-            console.log(result);
-            return result;
+            
+            return {success: true, message: 'Reservation deleted', id: id};
 
         } catch (e) {
             // TODO Manejar error

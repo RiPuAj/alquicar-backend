@@ -5,8 +5,8 @@
 *  Debe llamar a los métodos del modelo correspondientes
 */
 
-import { DatabaseError } from "../errors/database-error.js";
-import { ValidationError } from "../errors/validation-error.js";
+import { catchAndResponseError } from "../errors/database-error.js";
+
 
 export class ReservationController {
     constructor({ reservationModel }) {
@@ -19,11 +19,7 @@ export class ReservationController {
             return res.json(reservations);
         } catch (error) {
 
-            if (error instanceof ValidationError) {
-                console.log("ERROR DE VALIDACION")
-            } else if (error instanceof DatabaseError) {
-                console.log("ERROR DE BASE DE DATOS")
-            }
+            return catchAndResponseError(error, res);
         }
     }
 
@@ -37,11 +33,7 @@ export class ReservationController {
             return res.json(reservationModel);
 
         } catch (error) {
-            if (error instanceof ValidationError) {
-                console.log("ERROR DE VALIDACION")
-            } else if (error instanceof DatabaseError) {
-                console.log("ERROR DE BASE DE DATOS")
-            }
+            return catchAndResponseError(error, res);
         }
     }
 
@@ -53,13 +45,7 @@ export class ReservationController {
             return res.json(reservationModel);
 
         } catch (error) {
-            if (error instanceof ValidationError) {
-                console.log("ERROR DE VALIDACION")
-            } else if (error instanceof DatabaseError) {
-                console.log("ERROR DE BASE DE DATOS")
-            }
-            console.log(error);
-            return res.status(400).json({ error: error.message });
+            return catchAndResponseError(error, res);
         }
     }
 
@@ -74,13 +60,7 @@ export class ReservationController {
 
         } catch (error) {
             // TODO ERRORES
-            if (error instanceof ValidationError) {
-                return res.status(400).json({ error: error.message });
-            } else if (error instanceof DatabaseError) {
-                return res.status(400).json({ error: error.message });
-            } else {
-                return res.status(500).json({ error: "Ha ocurrido un error fatal" });
-            }
+            return catchAndResponseError(error, res);
         }
     }
 
@@ -90,11 +70,7 @@ export class ReservationController {
             const reservationModel = await this.reservationModel.delete({ id });
             return res.json(reservationModel);
         } catch (error) {
-            if (error instanceof ValidationError) {
-                console.log("ERROR DE VALIDACION")
-            } else if (error instanceof DatabaseError) {
-                console.log("ERROR DE BASE DE DATOS")
-            }
+            return catchAndResponseError(error, res);
         }
     }
 
@@ -104,11 +80,7 @@ export class ReservationController {
             const reservationModel = await this.reservationModel.getReservationsByVehicle({ idVehicle: id });
             return res.json(reservationModel);
         } catch (error) {
-            if (error instanceof ValidationError) {
-                console.log("ERROR DE VALIDACION")
-            } else if (error instanceof DatabaseError) {
-                console.log("ERROR DE BASE DE DATOS")
-            }
+            return catchAndResponseError(error, res);
         }
     }
 
@@ -118,11 +90,7 @@ export class ReservationController {
             const reservationModel = await this.reservationModel.getReservationsByCustomer({ idCustomer: id });
             return res.json(reservationModel);
         } catch (error) {
-            if (error instanceof ValidationError) {
-                console.log("ERROR DE VALIDACION")
-            } else if (error instanceof DatabaseError) {
-                console.log("ERROR DE BASE DE DATOS")
-            }
+            return catchAndResponseError(error, res);
         }
     }
 

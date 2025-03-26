@@ -68,8 +68,8 @@ Content-Type: application/json
 {
   "vehicle_id":2,
   "customer_id":"234e4567-e89b-12d3-a456-426614174111",
-  "start_date":"2023-05-10 09:00:00",
-  "end_date":"2023-05-12 09:00:00",
+  "start_date":"2023-05-15 09:00:00",
+  "end_date":"2023-05-18 09:00:00",
   "total_price":50.00
 }
 
@@ -87,7 +87,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/reservations/4
+PATCH http://localhost:3000/reservations/5
 Content-Type: application/json
 
 {
@@ -109,7 +109,7 @@ Content-Type: application/json
 GET http://localhost:3000/reservations/4
 
 ###
-DELETE http://localhost:3000/reservations/4
+DELETE http://localhost:3000/reservations/5
 
 ###
 GET http://localhost:3000/reservations/vehicle/2
