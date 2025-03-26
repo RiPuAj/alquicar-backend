@@ -5,7 +5,7 @@
 *  Debe llamar a los métodos del modelo correspondientes
 */
 
-import { catchAndResponseError } from "../errors/database-error.js";
+import { catchAndResponseError } from "../errors/handler-error.js";
 
 
 export class ReservationController {

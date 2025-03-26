@@ -4,7 +4,8 @@ import { createUserRouter } from './routes/users.js';
 import { UserModel } from './models/mysql/users.js';
 import { createReservationRouter } from './routes/reservations.js';
 import { ReservationModel } from './models/mysql/reservations.js';
-
+import { createVehicleRouter } from './routes/vehicles.js';
+import { VehicleModel } from './models/mysql/vehicle.js';
 
 dotenv.config({path: './.env'});
 
@@ -14,6 +15,7 @@ app.disable('x-powered-by');
 
 app.use('/users', createUserRouter({userModel: UserModel}));
 app.use('/reservations', createReservationRouter({reservationModel: ReservationModel}));
+app.use('/vehicles', createVehicleRouter({vehicleModel: VehicleModel}));
 
 
 app.use((req, res) => {

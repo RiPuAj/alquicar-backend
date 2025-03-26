@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
-import { handlerDatabaseError } from '../../errors.js';
+import { handlerDatabaseError } from '../../errors/handler-error.js';
 
 dotenv.config();
 
