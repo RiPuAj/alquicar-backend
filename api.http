@@ -2,23 +2,26 @@
 GET http://localhost:3000/users
 
 ###
-GET http://localhost:3000/users/123e4567-e89b-12d3-a456-426614174000
+GET http://localhost:3000/vehicles/
 
 ###
-GET http://localhost:3000/users/123e4567-e89b-12d3-a456-426614194000
+GET http://localhost:3000/vehicles/6
 
 ###
-POST http://localhost:3000/users
+POST http://localhost:3000/vehicles/
 Content-Type: application/json
 
 {
-  "name": "Javier Pulido",
-  "email": "jaasdlssas@gmail.com",
-  "password": "12345678",
-  "phone": "123343789",
-  "role": "admin",
-  "address":"MICASA",
-  "dni": "02322329B"
+  "owner_id": "345e4567-e89b-12d3-a456-426614174222",
+  "brand_id": 2,
+  "model_id": 1,
+  "year": 1991,
+  "type": "Sports",
+  "transmission": "Manual",
+  "fuel_type": "Diesel",
+  "capacity": 5,
+  "num_doors": 4,
+  "daily_price": 30
 }
 
 
@@ -28,14 +31,14 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "id" : "345e4567-e89b-12d3-a456-426614174422",  
-  "name": "Javier Pulido",
-  "email": "jaaadsfsl@gmail.com",
+  "id" : "1f1e081f-0c90-41c5-98d5-c1b4801a1a55",  
+  "name": "Pepe",
+  "email": "pepito@gmail.com",
   "password": "12345678",
-  "phone": "123423009",
+  "phone": "666666666",
   "role": "user",
-  "address":"MICASA",
-  "dni": "02342422B"
+  "address":"MICASA2",
+  "dni": "02342322B"
 }
 
 ###
@@ -43,7 +46,7 @@ PATCH http://localhost:3000/users/234e4567-e89b-12d3-a456-426614174111
 Content-Type: application/json
 
 {
-  "name": "Nicolas",
+  "name": "Nicolasio",
   "dni": "04325549B",
   "role": "user"
 }
