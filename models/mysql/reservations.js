@@ -1,24 +1,9 @@
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
 import { validateReservation, validatePartialReservation } from '../../schemas/reservations.js';
 import {handlerDatabaseError } from '../../errors/handler-error.js';
 import { ValidationError } from '../../errors/validation-error.js';
 import { CreateMYSQLConnection } from './mysql-config.js';
+import { DatabaseError } from '../../errors/database-error.js';
 
-/*
-dotenv.config();
-
-
-const config = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    port: process.env.DB_PORT,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-}
-
-const conn = await mysql.createConnection(config);
-*/
 
 const conn = await CreateMYSQLConnection.getConncetion();
 
@@ -48,7 +33,7 @@ export class ReservationModel {
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            throw new DatabaseError('Error getting user');
+            handlerDatabaseError({error: new DatabaseError('Error getting user')});
         }
     }
 
