@@ -2,8 +2,14 @@ import z from 'zod';
 
 const vehicleSchema = z.object({
     owner_id: z.string().uuid({ message: "Invalid UUID format for owner_id" }),
-    brand_id: z.number().int({ message : "Brand id must be an integer"}),
-    model_id: z.number().int({message : "Model id must be an integer"}),
+    brand: z.enum(['Toyota', 'Ford', 'BMW', 'Honda', 'Chevrolet', 'Mercedes-Benz', 'Audi', 'Nissan', 'Volkswagen', 
+    'Hyundai', 'Kia', 'Peugeot', 'Mazda', 'Subaru', 'Renault', 'Fiat', 'Porsche', 'Lexus', 'Chrysler', 
+    'Dodge', 'Jeep', 'Tesla', 'Land Rover', 'Jaguar', 'Ferrari', 'Lamborghini', 'Aston Martin', 'Maserati', 
+    'Bentley', 'Rolls-Royce', 'McLaren'], { 
+        invalid_type_error: "Not a brand model",
+        invalid_enum_value: "Brand not found"
+    }),
+    model: z.string(),
     year: z.number()
     .int({message : "Not a year"})
     .min(1900, {message : "Year must be at least 1900"})

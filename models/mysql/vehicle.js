@@ -52,8 +52,8 @@ export class VehicleModel {
 
         const {
             owner_id,
-            brand_id,
-            model_id,
+            brand,
+            model,
             year,
             type,
             transmission,
@@ -63,7 +63,6 @@ export class VehicleModel {
             daily_price,
         } = input;
 
-        let { deposit, availability, registration_date } = input;
 
         const existsOwner = await existOwner(owner_id);
 
@@ -74,18 +73,10 @@ export class VehicleModel {
             };
         }
 
-        const existsModel = await existModel(brand_id, model_id);
-
-        if(!existsModel){
-            return {
-                success: false,
-                message: 'Vehicle model does not exist'
-            };
-        }
 
         const optionalFields = ["deposit", "availability", "registration_date"];
         const fields = [
-            "owner_id", "brand_id", "model_id", "year", "type", "transmission",
+            "owner_id", "brand", "model", "year", "type", "transmission",
             "fuel_type", "capacity", "num_doors", "daily_price"
         ];
         const values = [
@@ -93,7 +84,7 @@ export class VehicleModel {
             "?", "?", "?", "?"
         ];
         const params = [
-            owner_id, brand_id, model_id, year, type, transmission,
+            owner_id, brand, model, year, type, transmission,
             fuel_type, capacity, num_doors, daily_price
         ];
 
@@ -109,9 +100,12 @@ export class VehicleModel {
         try {
             const query = `INSERT INTO vehicles (${fields.join(", ")}) VALUES (${values.join(", ")})`;
             const [newVehicle] = await conn.query(query, params);
-            
+
             const id = newVehicle.insertId;
-            return { success: true, message: 'Vehicle created', id };
+            
+            const vehicleUpdated = await VehicleModel.getById({id});
+        
+            return { success: true, message: 'Vehicle updated', vehicle: vehicleUpdated };
 
         } catch (e) {
             console.log(e);
