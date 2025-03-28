@@ -21,28 +21,9 @@ const redefineTimestampsToDatetime = (date) => {
 };
 
 export const validateReservation = (reservation) => {
-    const { start_date, end_date } = reservation;
-    const newReservation = {
-        ...reservation,
-        start_date: redefineTimestampsToDatetime(start_date),
-        end_date: redefineTimestampsToDatetime(end_date)
-    };
-
-    return reservationSchema.safeParse(newReservation);
+    return reservationSchema.safeParse(reservation);
 }
 
 export const validatePartialReservation = (reservation) => {
-    if (!reservation.start_date && !reservation.end_date) return reservationSchema.partial().safeParse(reservation);
-    const newReservation = {
-        ...reservation
-    };
-
-    console.log("AQUI SI ENTRA")
-    if (reservation.start_date) {
-        newReservation.start_date = redefineTimestampsToDatetime(reservation.start_date);
-    } else if (reservation.end_date) {
-        newReservation.end_date = redefineTimestampsToDatetime(reservation.end_date);
-    }
-
-    return reservationSchema.partial().safeParse(newReservation);
+    return reservationSchema.partial().safeParse(reservation);
 }

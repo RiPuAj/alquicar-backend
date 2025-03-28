@@ -35,6 +35,7 @@ export const catchAndResponseError = (error, res) => {
     } else if (error instanceof DatabaseError) {
       return res.status(400).json({ error: error.message });
     } else {
+      console.error(error); // Log the error for debugging
       return res.status(500).json({ error: "Ha ocurrido un error fatal" });
     }
   }

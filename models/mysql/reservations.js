@@ -52,11 +52,12 @@ export class ReservationModel {
         const {
             vehicle_id,
             customer_id,
-            start_date,
-            end_date,
             total_price,
             status
         } = input;
+
+        let start_date = changeDateFormat(input.start_date);
+        let end_date = changeDateFormat(input.end_date);
 
         try {
             // Verificar si el vehículo y el usuario que alquila existe
@@ -68,7 +69,9 @@ export class ReservationModel {
                 'INSERT INTO reservations (vehicle_id, customer_id, start_date, end_date, total_price, status) VALUES (?, UUID_TO_BIN(?), ?, ?, ?, ?)',
                 [vehicle_id, customer_id, start_date, end_date, total_price, status]
             );
-            return result;
+           
+            const newReservation = await this.getById({ id: result.insertId });
+            return newReservation;
 
         } catch (e) {
             // TODO Manejar error
@@ -87,6 +90,9 @@ export class ReservationModel {
 
         // Campos que no se pueden modificar
         if(input.id || input.vehicle_id || input.customer_id) handlerDatabaseError({error: new DatabaseError('Cannot update id, vehicle_id or customer_id')});
+
+        if(input.start_date) input.start_date = changeDateFormat(input.start_date);
+        if(input.end_date) input.end_date = changeDateFormat(input.end_date);
 
         const fields = Object.keys(input);
         const values = Object.values(input);
@@ -172,4 +178,9 @@ async function freeVehicleByDates({ idVehicle, startDate, endDate }) {
 
     return result[0].vehicle_busy === 1 ? false : true;
 
+}
+
+function changeDateFormat(date) {
+    const formattedDate = date.replace("T", " ").replace("Z", "");
+    return formattedDate; 
 }
