@@ -69,8 +69,9 @@ export class UserModel{
             await conn.query(`
                 INSERT INTO users (id, name, email, password, address, phone, role, dni)
                 VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?)`, [id, name, email, password, address, phone, role, dni]);
-            
-            return {success: true, message: 'User created', id};
+
+            const user = await UserModel.getById({id});
+            return {success: true, message: 'User created', user: user};
 
         } catch(e){
             console.log(e.code);
