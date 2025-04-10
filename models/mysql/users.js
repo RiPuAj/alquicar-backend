@@ -38,10 +38,13 @@ export class UserModel{
     }
 
     static async getByEmail({email}){
+
         try{
+
             const [users, tableInfo] = await conn.query(
                 'SELECT BIN_TO_UUID(id) AS id, name, email, address, phone, role, dni FROM users WHERE email = ?',  [email]);
             return users;
+
         }catch(e){
             // TODO Manejar error
             console.log(e);
