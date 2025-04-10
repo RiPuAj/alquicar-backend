@@ -13,3 +13,10 @@ npm run dev
 ```bash 
 npm install
 ```
+
+## Métodos generales de acceso:
+### User:
+
+### Vehicle:
+
+### Reservation:
