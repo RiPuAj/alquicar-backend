@@ -1,14 +1,14 @@
 ###
-GET http://localhost:3000/users
+GET http://88.24.223.105:3000/users/6ca12a88-17e5-11f0-9c57-0a0027000011
 
 ###
-GET http://localhost:3000/vehicles/
+GET http://88.24.223.105:3000/vehicles/
 
 ###
-GET http://localhost:3000/vehicles/6
+GET http://88.24.223.105:3000/vehicles/
 
 ###
-POST http://localhost:3000/vehicles/
+POST http://88.24.223.105:3000/vehicles/
 Content-Type: application/json
 
 {
@@ -27,22 +27,22 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:3000/users
+POST http://88.24.223.105:3000/users
 Content-Type: application/json
 
 {
-  "id" : "1f1e081f-0c90-41c5-98d5-c1b4801a1a55",  
-  "name": "Pepe",
-  "email": "pepito@gmail.com",
+  "id" : "d7227952-4c89-426e-bcf8-08bd4e801fd0",  
+  "name": "Juanito",
+  "email": "Juanito@gmail.com",
   "password": "12345678",
   "phone": "666666666",
   "role": "user",
-  "address":"MICASA2",
-  "dni": "02342322B"
+  "address":"MICASA3",
+  "dni": "02342322Z"
 }
 
 ###
-PATCH http://localhost:3000/users/234e4567-e89b-12d3-a456-426614174111
+PATCH http://88.24.223.105:3000/users/234e4567-e89b-12d3-a456-426614174111
 Content-Type: application/json
 
 {
@@ -52,20 +52,20 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/users/123e4567-e89b-12d3-a456-426614174000
+DELETE http://88.24.223.105:3000/users/123e4567-e89b-12d3-a456-426614174000
 
 
 ###
-GET http://localhost:3000/reservations
+GET http://88.24.223.105:3000/reservations
 
 ###
-GET http://localhost:3000/reservations/2
+GET http://88.24.223.105:3000/reservations/2
 
 ###
-GET http://localhost:3000/reservations/3
+GET http://88.24.223.105:3000/reservations/
 
 ### 
-POST http://localhost:3000/reservations
+POST http://88.24.223.105:3000/reservations
 Content-Type: application/json
 
 {
@@ -77,7 +77,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/reservations
+POST http://88.24.223.105:3000/reservations
 Content-Type: application/json
 
 {
@@ -90,7 +90,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/reservations/5
+PATCH http://88.24.223.105:3000/reservations/5
 Content-Type: application/json
 
 {
@@ -99,7 +99,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/reservations/4
+PATCH http://88.24.223.105:3000/reservations/4
 Content-Type: application/json
 
 {
@@ -109,16 +109,16 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/reservations/4
+GET http://88.24.223.105:3000/reservations/4
 
 ###
-DELETE http://localhost:3000/reservations/5
+DELETE http://88.24.223.105:3000/reservations/5
 
 ###
-GET http://localhost:3000/reservations/vehicle/2
+GET http://88.24.223.105:3000/reservations/vehicle/2
 
 ###
-GET http://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
+GET http://88.24.223.105:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
 
 ###
-GET http://localhost:3000/users/email/alice.smith@example.com
+GET http://88.24.223.105:3000/users/email/alice.smith@example.com
