@@ -6,13 +6,14 @@ import { createReservationRouter } from './routes/reservations.js';
 import { ReservationModel } from './models/mysql/reservations.js';
 import { createVehicleRouter } from './routes/vehicles.js';
 import { VehicleModel } from './models/mysql/vehicle.js';
+import cors from 'cors';
 
 dotenv.config({path: './.env'});
 
 const app = express();
 app.use(express.json());
 app.disable('x-powered-by');
-
+app.use(cors());
 app.use('/users', createUserRouter({userModel: UserModel}));
 app.use('/reservations', createReservationRouter({reservationModel: ReservationModel}));
 app.use('/vehicles', createVehicleRouter({vehicleModel: VehicleModel}));
