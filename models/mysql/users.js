@@ -43,7 +43,7 @@ export class UserModel{
 
             const [users, tableInfo] = await conn.query(
                 'SELECT BIN_TO_UUID(id) AS id, name, email, address, phone, role, dni FROM users WHERE email = ?',  [email]);
-            return users;
+            return users[0];
 
         }catch(e){
             // TODO Manejar error
