@@ -51,6 +51,20 @@ export class UserModel{
             throw new DatabaseError('Error getting user');
         }
     }
+    static async getByEmailWithPass({email}){
+
+        try{
+
+            const [users, tableInfo] = await conn.query(
+                'SELECT BIN_TO_UUID(id) AS id, name, email, password, address, phone, role, dni FROM users WHERE email = ?',  [email]);
+            return users[0];
+
+        }catch(e){
+            // TODO Manejar error
+            console.log(e);
+            throw new DatabaseError('Error getting user');
+        }
+    }
     
     static async create({input}){
 

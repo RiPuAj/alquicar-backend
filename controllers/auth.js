@@ -1,4 +1,5 @@
-import { UserModel } from '../model/user.model.js';
+import { UserModel } from '../models/mysql/users.js';
+import { registerSchema } from '../schemas/auth.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -30,12 +31,13 @@ if (error) return res.status(400).json({ message: error.details[0].message });
     const { error } = registerSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
     const { email, password } = req.body;
-
     try {
-      const user = await UserModel.findByEmail(email);
+      var user = await UserModel.getByEmailWithPass({email});
+      console.log(password, user.password);
       if (!user) return res.status(400).json({ message: 'Usuario no encontrado' });
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      var isMatch = await bcrypt.compare(password, user.password);
+      isMatch = password === user.password;
       if (!isMatch) return res.status(400).json({ message: 'Contraseña incorrecta' });
 
       const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });

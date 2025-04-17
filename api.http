@@ -121,4 +121,13 @@ GET https://localhost:3000/reservations/vehicle/2
 GET https://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
 
 ###
-GET https://localhost:3000/users/email/alice.smith@example.com
+GET https://localhost:3000/users/email/pepito@gmail.com
+
+###
+POST https://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "pepito@gmail.com",
+  "password": "12345678"
+}
