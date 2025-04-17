@@ -1,5 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import https from 'https';
 import { createUserRouter } from './routes/users.js';
 import { UserModel } from './models/mysql/users.js';
 import { createReservationRouter } from './routes/reservations.js';
@@ -9,6 +11,10 @@ import { VehicleModel } from './models/mysql/vehicle.js';
 
 dotenv.config({path: './.env'});
 
+const options = {
+    key: fs.readFileSync('backkey.pem'),
+    cert: fs.readFileSync('backcert.pem'),
+  };
 const app = express();
 app.use(express.json());
 app.disable('x-powered-by');
@@ -22,7 +28,6 @@ app.use((req, res) => {
     res.status(404).send('<h1>404 Not Found</h1>');
 })
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`);
-    }
-);
+https.createServer(options, app).listen(process.env.PORT, () => {
+    console.log(`Servidor HTTPS activo en https://localhost:${process.env.PORT}`);
+  });
