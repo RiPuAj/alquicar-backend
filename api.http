@@ -1,14 +1,14 @@
 ###
-GET http://localhost:3000/users
+GET https://localhost:3000/users
 
 ###
-GET http://localhost:3000/vehicles/
+GET https://localhost:3000/vehicles/
 
 ###
-GET http://localhost:3000/vehicles/6
+GET https://localhost:3000/vehicles/6
 
 ###
-POST http://localhost:3000/vehicles/
+POST https://localhost:3000/vehicles/
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:3000/users
+POST https://localhost:3000/users
 Content-Type: application/json
 
 {
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/users/234e4567-e89b-12d3-a456-426614174111
+PATCH https://localhost:3000/users/234e4567-e89b-12d3-a456-426614174111
 Content-Type: application/json
 
 {
@@ -52,20 +52,20 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/users/123e4567-e89b-12d3-a456-426614174000
+DELETE https://localhost:3000/users/123e4567-e89b-12d3-a456-426614174000
 
 
 ###
-GET http://localhost:3000/reservations
+GET https://localhost:3000/reservations
 
 ###
-GET http://localhost:3000/reservations/2
+GET https://localhost:3000/reservations/2
 
 ###
-GET http://localhost:3000/reservations/3
+GET https://localhost:3000/reservations/3
 
 ### 
-POST http://localhost:3000/reservations
+POST https://localhost:3000/reservations
 Content-Type: application/json
 
 {
@@ -77,7 +77,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/reservations
+POST https://localhost:3000/reservations
 Content-Type: application/json
 
 {
@@ -90,7 +90,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/reservations/5
+PATCH https://localhost:3000/reservations/5
 Content-Type: application/json
 
 {
@@ -99,7 +99,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/reservations/4
+PATCH https://localhost:3000/reservations/4
 Content-Type: application/json
 
 {
@@ -109,16 +109,50 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/reservations/4
+GET https://localhost:3000/reservations/4
 
 ###
-DELETE http://localhost:3000/reservations/5
+DELETE https://localhost:3000/reservations/5
 
 ###
-GET http://localhost:3000/reservations/vehicle/2
+GET https://localhost:3000/reservations/vehicle/2
 
 ###
-GET http://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
+GET https://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
 
 ###
-GET http://localhost:3000/users/email/alice.smith@example.com
+GET https://localhost:3000/users/email/pepito@gmail.com
+
+###
+POST https://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "pepito@gmail.com",
+  "password": "12345678"
+}
+
+###
+POST https://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "email": "juanito@gmail.com",
+  "password": "Nicoloco",
+  "address": "sevilla",
+  "phone": "928368924",
+  "dni": "43547121Z"
+}
+
+###
+POST https://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "juanito@gmail.com",
+  "password": "Nicoloco"
+}
+
+###
+GET https://localhost:3000/users/email/juanito@gmail.com

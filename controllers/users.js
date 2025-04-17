@@ -61,6 +61,24 @@ export class UserController {
         
     }
 
+    getByEmailWithPass = async (req, res) => {
+        const { email } = req.params;
+        try{
+            const users = await this.userModel.getByEmailWithPass({ email })
+            if (users.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            return res.json(users);
+        }catch{
+            if (e instanceof DatabaseError) {
+                return res.status(500).json({ error: e.message });
+            }
+
+            console.log(e);
+        }
+        
+    }
+
     create = async (req, res) => {
 
         const user = validateUser(req.body);
