@@ -156,3 +156,6 @@ Content-Type: application/json
 
 ###
 GET https://localhost:3000/users/email/juanito@gmail.com
+
+###
+GET https://localhost:3000/users/getdata/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWJhMTljLTFiYTQtMTFmMC1hOWZjLTg3ZDI4NzJmNTUxYyIsImlhdCI6MTc0NDk4MzY1NCwiZXhwIjoxNzQ1MDcwMDU0fQ.2S6Ad0On3qUiulzHbqiEizdTrd9g8BSCH-J5UqTmcKU

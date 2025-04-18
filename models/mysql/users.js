@@ -1,8 +1,7 @@
 import { handlerDatabaseError } from '../../errors/handler-error.js';
 import { CreateMYSQLConnection } from './mysql-config.js';
-
+import { v4 as uuidv4, parse, stringify } from 'uuid';
 const conn = await CreateMYSQLConnection.getConncetion();
-
 export class UserModel{
     static async getAll(){
 
@@ -18,6 +17,16 @@ export class UserModel{
         }
 
         
+    }
+    static async getData({token}){
+        try{
+            const [session] = await conn.query("SELECT * from sessions WHERE sessionid = ?", [token]);
+            const id = stringify(session[0].user_id);
+            const data = await this.getById({id});
+            return data;
+        }catch (e){
+            console.log(e);
+        }
     }
             
     static async getById({id}){

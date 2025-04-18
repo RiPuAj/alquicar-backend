@@ -1,12 +1,26 @@
 import { validateUser, validatePartialUser } from '../schemas/user.js';
 import { DatabaseError } from '../errors/database-error.js';
 
+
 export class UserController {
 
     constructor({ userModel }) {
         this.userModel = userModel;
     }
 
+    getData = async(req, res)=>{
+        try {
+            const token = req.params.token;
+            if (!token) {
+                return res.status(400).json({ message: 'Token no proporcionado' });
+              }
+            const data = await this.userModel.getData(token);
+            console.log(data)
+            return res.json(data);
+        } catch (error) {
+            
+        }
+    }
 
     getAll = async (req, res) => {
 

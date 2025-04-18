@@ -7,6 +7,7 @@ export const createUserRouter = ({userModel}) => {
     const userController = new UserController({userModel});
 
     userRouter.get("/", userController.getAll);
+    userRouter.get("/getdata/:token", userController.getData)
     userRouter.get("/:id", userController.getById);
     userRouter.get("/email/:email", userController.getByEmail);
     userRouter.post("/", userController.create);
