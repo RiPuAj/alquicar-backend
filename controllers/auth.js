@@ -1,6 +1,7 @@
 import { UserModel } from '../models/mysql/users.js';
 import { registerSchema } from '../schemas/auth.js'
 import { loginSchema } from '../schemas/auth.js';
+import { AuthModel } from '../models/mysql/auth.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
@@ -73,7 +74,7 @@ if (error) return res.status(400).json({ message: error.details[0].message });
       if (!isMatch) return res.status(400).json({ message: 'Contraseña incorrecta' });
 
       const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
-
+      await AuthController.createSession(user, token);
       res.json({ token });
     } catch (e) {
       console.error(e);
@@ -92,5 +93,9 @@ if (error) return res.status(400).json({ message: error.details[0].message });
       console.error(e);
       res.status(400).json({ message: 'Token inválido o expirado' });
     }
+  }
+  static async createSession(user, token){
+    AuthModel.createSession({user, token});
+
   }
 }
