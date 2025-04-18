@@ -3,8 +3,19 @@ import { registerSchema } from '../schemas/auth.js'
 import { loginSchema } from '../schemas/auth.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER, // tu correo
+    pass: process.env.EMAIL_PASS  // una contraseña de aplicación
+  }
+});
+
 
 const JWT_SECRET = process.env.JWT_SECRET;
+
 
 export class AuthController {
   static async register(req, res) {
@@ -14,7 +25,6 @@ if (error) return res.status(400).json({ message: error.details[0].message });
 
     try {
       const existingUser = await UserModel.getByEmail({email});
-      console.log(existingUser)
       if (existingUser) {
         return res.status(400).json({ message: 'El usuario ya existe' });
       }
@@ -31,7 +41,18 @@ if (error) return res.status(400).json({ message: error.details[0].message });
           dni: dni
         }
       });
-
+      const token = jwt.sign({ id: user.user[0].id }, JWT_SECRET, { expiresIn: '1h' });
+      console.log(user.user[0]);
+      await transporter.sendMail({
+        from: '"Alquicar" <tu-correo@gmail.com>',
+        to: user.user[0].email,
+        subject: 'Confirma tu correo',
+        html: `
+          <h3>Hola ${user.user[0].name}</h3>
+          <p>Gracias por registrarte. Haz clic en el siguiente enlace para confirmar tu cuenta:</p>
+          <a href="https://localhost:3000/auth/verify?token=${token}">Confirmar cuenta</a>
+        `
+      });
       res.status(201).json({ message: 'Usuario registrado', user });
     } catch (e) {
       console.error(e);
@@ -57,6 +78,19 @@ if (error) return res.status(400).json({ message: error.details[0].message });
     } catch (e) {
       console.error(e);
       res.status(500).json({ message: 'Error en el login' });
+    }
+  }
+  static async verify(req, res){
+    const { token } = req.query;
+    try {
+      const { id } = jwt.verify(token, JWT_SECRET);
+      if (id){
+        res.status(200).json({ message: 'Cuenta confirmada correctamente' });
+      }
+      res.status(400).json({ message: 'fallo en la verificación' });
+    } catch (e) {
+      console.error(e);
+      res.status(400).json({ message: 'Token inválido o expirado' });
     }
   }
 }

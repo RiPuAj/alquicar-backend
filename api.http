@@ -52,7 +52,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE https://localhost:3000/users/123e4567-e89b-12d3-a456-426614174000
+DELETE https://localhost:3000/users/88985a11-1c37-11f0-9c57-0a0027000011
 
 
 ###
@@ -137,9 +137,9 @@ POST https://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-  "name": "Juan",
-  "email": "juanito@gmail.com",
-  "password": "Nicoloco",
+  "name": "Niloco",
+  "email": "nicolasreyalonso@gmail.com",
+  "password": "Nicololo",
   "address": "sevilla",
   "phone": "928368924",
   "dni": "43547121Z"
