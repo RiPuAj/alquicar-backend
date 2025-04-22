@@ -22,6 +22,7 @@ CREATE TABLE users(
     created_at TIMESTAMP DEFAULT NOW(),
     dni VARCHAR(9) NOT NULL UNIQUE
     );
+
     -- Crear tabla de sesiones
     CREATE TABLE sessions (
     sessionid VARCHAR(512) NOT NULL,              -- jwebtoken, suele ser una cadena larga

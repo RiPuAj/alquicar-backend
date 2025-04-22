@@ -10,12 +10,11 @@ export class UserController {
 
     getData = async(req, res)=>{
         try {
-            const token = req.params.token;
+            const token = await req.params.token;
             if (!token) {
                 return res.status(400).json({ message: 'Token no proporcionado' });
               }
-            const data = await this.userModel.getData(token);
-            console.log(data)
+            const data = await this.userModel.getData({token});
             return res.json(data);
         } catch (error) {
             
