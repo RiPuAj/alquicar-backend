@@ -7,7 +7,11 @@ DROP TABLE IF EXISTS incidences;
 DROP TABLE IF EXISTS reservations;
 DROP TABLE IF EXISTS vehicles;
 DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF exists vehicles_models;
+DROP TABLE IF exists vehicles_brands;
+
 
 
 CREATE TABLE users(
@@ -28,6 +32,8 @@ CREATE TABLE vehicles (
     owner_id BINARY(16) NOT NULL,
     brand VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
+    latitude DECIMAL(8,6) NOT NULL,
+    longitude DECIMAL(9,6) NOT NULL,
     year YEAR NOT NULL,
     type ENUM('Sedan', 'SUV', 'Truck', 'Sports', 'Hatchback', 'Convertible') NOT NULL,
     transmission ENUM('Manual', 'Automatic') NOT NULL,
@@ -41,7 +47,17 @@ CREATE TABLE vehicles (
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+  CREATE TABLE sessions (
+    sessionid VARCHAR(512) NOT NULL,              -- jwebtoken, suele ser una cadena larga
+    user_id BINARY(16) NOT NULL,                     -- id del usuario, referencia a otra tabla
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- fecha de creación automática
+    expires_at DATETIME NOT NULL,             -- fecha de caducidad
 
+    PRIMARY KEY (sessionid),                      -- asumiendo que el token es único
+    FOREIGN KEY (user_id) REFERENCES users(id) -- referencia a la tabla de usuarios
+);
+    CREATE INDEX idx_sessions_sessionid ON sessions (sessionid);
+    
 CREATE TABLE reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     vehicle_id INT NOT NULL,
@@ -101,11 +117,11 @@ VALUES (UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'),'John Doe', 'john.do
 
 -- Insertar vehiculos
 
-INSERT INTO vehicles (owner_id, brand, model, year, type, transmission, fuel_type, capacity, num_doors, daily_price, availability) 
+INSERT INTO vehicles (owner_id, brand, model, latitude, longitude, year, type, transmission, fuel_type, capacity, num_doors, daily_price, availability) 
 VALUES 
-(UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), 'Hyundai', 'Tucson', 2022, 'Sedan', 'Automatic', 'Gasoline', 5, 3, 45.00, TRUE),
-(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), 'Citroën', 'Saxo', 2006, 'Sports', 'Manual', 'Gasoline', 2, 4, 80.00, TRUE),
-(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), 'Nissan', 'Qashqai', 2023, 'SUV', 'Automatic', 'Diesel', 7, 5,120.00, TRUE);
+(UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), 'Hyundai', 'Tucson', 12.3856, -45.9273, 2022, 'Sedan', 'Automatic', 'Gasoline', 5, 3, 45.00, TRUE),
+(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), 'Citroën', 'Saxo', -33.7421, 151.1194, 2006, 'Sports', 'Manual', 'Gasoline', 2, 4, 80.00, TRUE),
+(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), 'Nissan', 'Qashqai', 48.2163, 16.4027, 2023, 'SUV', 'Automatic', 'Diesel', 7, 5,120.00, TRUE);
 
 -- INSERTAR RESERVAS
 INSERT INTO reservations (vehicle_id, customer_id, start_date, end_date, total_price, status) 
@@ -114,9 +130,6 @@ VALUES
 (2, UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), '2023-05-10 09:00:00', '2023-05-12 09:00:00', 240.00, 'Pending'),
 (2, UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), '2023-05-10 09:00:00', '2023-05-12 09:00:00', 240.00, 'Pending'),
 (3, UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), '2023-06-15 14:00:00', '2023-06-20 14:00:00', 600.00, 'Cancelled');
-
-
-
 
 
 
