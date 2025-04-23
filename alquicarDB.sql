@@ -43,12 +43,7 @@ CREATE TABLE vehicles_brands (
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE vehicles_models (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-    model VARCHAR(50) NOT NULL UNIQUE,
-    brand_id INT NOT NULL,
-    FOREIGN KEY (brand_id) REFERENCES vehicles_brands(id) ON DELETE CASCADE
-);
+
     
 
 CREATE TABLE vehicles (
