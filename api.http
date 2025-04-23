@@ -5,23 +5,15 @@ GET https://localhost:3000/users
 GET https://localhost:3000/vehicles/
 
 ###
-GET https://localhost:3000/vehicles/6
+GET https://localhost:3000/vehicles/3
 
 ###
-POST https://localhost:3000/vehicles/
+PATCH https://localhost:3000/vehicles/4
 Content-Type: application/json
 
 {
-  "owner_id": "345e4567-e89b-12d3-a456-426614174222",
-  "brand": "TOYOTA",
-  "model": "YARIS",
-  "year": 1991,
-  "type": "Sports",
-  "transmission": "Manual",
-  "fuel_type": "Diesel",
-  "capacity": 5,
-  "num_doors": 4,
-  "daily_price": 30
+  "latitude": 40.4002,
+  "year": 1990
 }
 
 

@@ -45,6 +45,8 @@ export class VehicleModel {
             owner_id,
             brand,
             model,
+            latitude,
+            longitude,
             year,
             type,
             transmission,
@@ -67,15 +69,15 @@ export class VehicleModel {
 
         const optionalFields = ["deposit", "availability", "registration_date"];
         const fields = [
-            "owner_id", "brand", "model", "year", "type", "transmission",
+            "owner_id", "brand", "model", "latitude", "longitude", "year", "type", "transmission",
             "fuel_type", "capacity", "num_doors", "daily_price"
         ];
         const values = [
             "UUID_TO_BIN(?)", "?", "?", "?", "?", "?",
-            "?", "?", "?", "?"
+            "?", "?", "?", "?", "?", "?"
         ];
         const params = [
-            owner_id, brand, model, year, type, transmission,
+            owner_id, brand, model,  latitude, longitude, year, type, transmission,
             fuel_type, capacity, num_doors, daily_price
         ];
 

@@ -10,6 +10,20 @@ const vehicleSchema = z.object({
         invalid_enum_value: "Brand not found"
     }),
     model: z.string(),
+    latitude: z
+    .number({ required_error: "Latitude is required", invalid_type_error: "Latitude must be a number" })
+    .min(-90, { message: "Latitude must be ≥ -90" })
+    .max(90, { message: "Latitude must be ≤ 90" })
+    .refine((val) => Number.isInteger(val * 1_000_000), {
+      message: "Latitude must have at most 6 decimal places",
+    }),
+    longitude: z
+    .number({ required_error: "Longitude is required", invalid_type_error: "Longitude must be a number" })
+    .min(-180, { message: "Longitude must be ≥ -180" })
+    .max(180, { message: "Longitude must be ≤ 180" })
+    .refine((val) => Number.isInteger(val * 1_000_000), {
+      message: "Longitude must have at most 6 decimal places",
+    }),
     year: z.number()
     .int({message : "Not a year"})
     .min(1900, {message : "Year must be at least 1900"})
