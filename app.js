@@ -8,6 +8,8 @@ import { createReservationRouter } from './routes/reservations.js';
 import { ReservationModel } from './models/mysql/reservations.js';
 import { createVehicleRouter } from './routes/vehicles.js';
 import { VehicleModel } from './models/mysql/vehicle.js';
+import { createIncidenceRouter } from './routes/incidences.js';
+import { incidenceModel } from './models/mysql/incidences.js';
 import cors from 'cors';
 import { authRouter } from './routes/auth.js';
 
