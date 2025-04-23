@@ -38,13 +38,7 @@ CREATE TABLE users(
     FOREIGN KEY (user_id) REFERENCES users(id) -- referencia a la tabla de usuarios
 );
     CREATE INDEX idx_sessions_sessionid ON sessions (sessionid);
-CREATE TABLE vehicles_brands (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
-);
 
-
-    
 
 CREATE TABLE vehicles (
     id INT AUTO_INCREMENT PRIMARY KEY,
