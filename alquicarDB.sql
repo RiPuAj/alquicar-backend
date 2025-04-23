@@ -54,15 +54,10 @@ CREATE TABLE vehicles_models (
 CREATE TABLE vehicles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     owner_id BINARY(16) NOT NULL,
-<<<<<<< HEAD
     brand VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
     latitude DECIMAL(8,6) NOT NULL,
     longitude DECIMAL(9,6) NOT NULL,
-=======
-    brand_id INT NOT NULL,
-    model_id INT NOT NULL,
->>>>>>> c76247e801906379cf3ca87c4ea91e2120c7a9d3
     year YEAR NOT NULL,
     type ENUM('Sedan', 'SUV', 'Truck', 'Sports', 'Hatchback', 'Convertible') NOT NULL,
     transmission ENUM('Manual', 'Automatic') NOT NULL,
