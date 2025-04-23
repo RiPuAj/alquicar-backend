@@ -5,6 +5,9 @@ GET https://localhost:3000/users
 GET https://localhost:3000/vehicles/
 
 ###
+GET https://localhost:3000/incidences
+
+###
 GET https://localhost:3000/vehicles/6
 
 ###
