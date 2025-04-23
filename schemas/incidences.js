@@ -22,10 +22,10 @@ const incidenceSchema = z.object({
 });
 
 
-export function validateUser(input){
-    return userSchema.safeParse(input);
+export function validateIncidence(input){
+    return incidenceSchema.safeParse(input);
 }
 
-export function validatePartialUser(input){
-    return userSchema.partial().safeParse(input);
+export function validatePartialIncidence(input){
+    return incidenceSchema.partial().safeParse(input);
 }
