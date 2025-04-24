@@ -14,7 +14,7 @@ export class UserController {
             if (!token) {
                 return res.status(400).json({ message: 'Token no proporcionado' });
               }
-            const data = await this.userModel.getData(token);
+            const data = await this.userModel.getData({token});
             console.log(data)
             return res.json(data);
         } catch (error) {
