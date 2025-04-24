@@ -23,7 +23,7 @@ app.disable('x-powered-by');
 app.use(cors());
 app.use('/users', createUserRouter({userModel: UserModel}));
 app.use('/reservations', createReservationRouter({reservationModel: ReservationModel}));
-app.use('/vehicles', createVehicleRouter({vehicleModel: VehicleModel}));
+app.use('/vehicles', createVehicleRouter({vehicleModel: VehicleModel, userModel: UserModel}));
 app.use('/auth', authRouter);
 
 app.use((req, res) => {

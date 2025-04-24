@@ -1,3 +1,4 @@
+
 import { handlerDatabaseError } from '../../errors/handler-error.js';
 import { CreateMYSQLConnection } from './mysql-config.js';
 
@@ -175,9 +176,22 @@ export class VehicleModel {
 
 
     }
+    static async publish({ user, input }){
+        console.log(user);
+        console.log(input);
+        delete input.token;
+        input.owner_id = user;
+        console.log(input);
+        try{
+            this.create({ input });
+        }catch (e){
+
+        }
+
+    }
 
 }
-
+    
 
     async function existOwner(ownerId) {
 
@@ -185,6 +199,8 @@ export class VehicleModel {
         return result[0].owner_exists === 1 ? true : false;
     
     }
+
+    
 
     async function existModel(brandId, modelId){
         const [result] = await conn.query(

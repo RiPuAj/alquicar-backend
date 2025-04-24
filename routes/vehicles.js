@@ -9,6 +9,7 @@ export const createVehicleRouter = ({ vehicleModel }) => {
     vehicleRouter.get("/", vehicleController.getAll);
     vehicleRouter.get("/:id", vehicleController.getById);
     vehicleRouter.post("/", vehicleController.create);
+    vehicleRouter.post("/publish", vehicleController.publish)
     vehicleRouter.patch("/:id", vehicleController.update);
     vehicleRouter.delete("/:id", vehicleController.delete);
 

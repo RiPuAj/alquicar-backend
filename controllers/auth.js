@@ -45,7 +45,7 @@ if (error) return res.status(400).json({ message: error.details[0].message });
       const token = jwt.sign({ id: user.user[0].id }, JWT_SECRET, { expiresIn: '1h' });
       console.log(user.user[0]);
       await transporter.sendMail({
-        from: '"Alquicar" <tu-correo@gmail.com>',
+        from: '"Alquicar" <alquicar03@gmail.com>',
         to: user.user[0].email,
         subject: 'Confirma tu correo',
         html: `

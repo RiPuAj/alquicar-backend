@@ -5,16 +5,26 @@ GET https://localhost:3000/users
 GET https://localhost:3000/vehicles/
 
 ###
-GET https://localhost:3000/vehicles/3
+GET https://localhost:3000/vehicles/6
 
 ###
-PATCH https://localhost:3000/vehicles/4
+POST https://localhost:3000/vehicles/
 Content-Type: application/json
 
 {
-  "latitude": 40.4002,
-  "year": 1990
+  "owner_id": "345e4567-e89b-12d3-a456-426614174222",
+  "brand": "TOYOTA",
+  "model": "YARIS",
+  "year": 1991,
+  "type": "Sports",
+  "transmission": "Manual",
+  "fuel_type": "Diesel",
+  "capacity": 5,
+  "num_doors": 4,
+  "daily_price": 30
 }
+
+
 
 
 
@@ -142,12 +152,31 @@ POST https://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "juanito@gmail.com",
-  "password": "Nicoloco"
+  "email": "nicolasreyalonso@gmail.com",
+  "password": "Nicololo"
 }
 
 ###
 GET https://localhost:3000/users/email/juanito@gmail.com
 
 ###
-GET https://localhost:3000/users/getdata/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWJhMTljLTFiYTQtMTFmMC1hOWZjLTg3ZDI4NzJmNTUxYyIsImlhdCI6MTc0NDk4MzY1NCwiZXhwIjoxNzQ1MDcwMDU0fQ.2S6Ad0On3qUiulzHbqiEizdTrd9g8BSCH-J5UqTmcKU
+GET https://localhost:3000/users/getdata/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBhOTJmMmRjLTIxMjEtMTFmMC1hZWYyLTU5OWIwMjM1MDU3YiIsImlhdCI6MTc0NTUxMTQ2MSwiZXhwIjoxNzQ1NTk3ODYxfQ.7R9C7eWEoSvokfKnFvu03QjtIsJXRtdkfW__r-2GBlU
+
+###
+POST https://localhost:3000/vehicles/publish
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI1OTNjYzkyLTIxMmItMTFmMC1hZWYyLTU5OWIwMjM1MDU3YiIsImlhdCI6MTc0NTUxMzIxNCwiZXhwIjoxNzQ1NTk5NjE0fQ.0Bt0r8OxQ2sDUPwN-Gv9w6gbLKE8SkSiDx5TjaW10Gw",
+  "brand": "Toyota",
+  "model": "YARIS",
+  "year": 1991,
+  "type": "Sports",
+  "latitude": 0,
+  "longitude": 0,
+  "transmission": "Manual",
+  "fuel_type": "Diesel",
+  "capacity": 5,
+  "num_doors": 4,
+  "daily_price": 30
+}

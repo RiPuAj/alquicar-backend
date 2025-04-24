@@ -1,8 +1,8 @@
-import{ validateVehicle, validatePartialVehicle } from '../schemas/vehicle.js';
-
+import{ validateVehicle, validatePartialVehicle, validateVehicleWithToken } from '../schemas/vehicle.js';
+import { UserModel } from '../models/mysql/users.js';
 export class VehicleController {
     
-    constructor({vehicleModel}) {
+    constructor({vehicleModel, userModel}) {
         this.vehicleModel = vehicleModel;
     }
 
@@ -47,6 +47,20 @@ export class VehicleController {
         }
         return res.status(201).json(newVehicle);
 
+    }
+
+    publish = async (req, res) =>{
+        const vehicleanduser = validateVehicleWithToken(req.body);
+        if (!vehicleanduser.success) {
+            return res.status(400).json({ error: JSON.parse(vehicleanduser.error.message) });
+        }
+        console.log(vehicleanduser);
+        const user = await UserModel.getData({token: vehicleanduser.data.token});
+        if (!user){
+            return res.status(400).json({error: "token not valid"})
+        }
+        const newVehicle = await this.vehicleModel.publish({user: user[0].id, input: vehicleanduser.data});
+        return;
     }
 
     update = async (req, res) => {
