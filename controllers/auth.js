@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validateUser, validatePartialUser } from '../schemas/user.js';
 import { catchAndResponseError } from '../errors/handler-error.js';
+import { EmailSender } from '../services/emailSender.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -85,8 +86,14 @@ export class AuthController {
 
     try {
 
-      const user = await this.userModel.create({ input: userWithHashedPassword });
-      res.status(201).json(user);
+      const response = await this.userModel.create({ input: userWithHashedPassword });
+
+      EmailSender.sendConfirmationEmail({
+        email: response.user[0].email,
+        name: response.user[0].name,
+        token: this.createToken({ id: response.user[0].id, role: response.user[0].role })
+      });
+      res.status(201).json({message: 'Usuario registrado, falta verificación de correo'});	
 
     } catch (error) {
       catchAndResponseError(error, res);
@@ -103,6 +110,7 @@ export class AuthController {
 
     try {
       const user = await this.userModel.getByEmailWithPass({ email: req.body.email });
+      console.log(user);
 
 
       if (!user) {
@@ -113,13 +121,13 @@ export class AuthController {
 
       if (!passwordComparation) res.status(401).json({ error: 'Contraseña incorrecta' });
 
-      const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
+      const token = this.createToken({ id: user.id, role: user.role });
 
 
       res.cookie('access_token', token, {
         httpOnly: true,
         sameSite: 'strict',
-        maxAge: 24 * 60 * 60 * 1000, 
+        maxAge: 24 * 60 * 60 * 1000,
       }).send(
         {
           user: {
@@ -138,6 +146,28 @@ export class AuthController {
     } catch (error) {
       catchAndResponseError(error, res);
     }
+  }
+
+  verifyAccount = async (req, res) =>{
+    const token = req.query.token;
+    if (!token) return res.status(400).json({ error: 'Token no proporcionado' });
+
+    const decoded = jwt.decode(token, JWT_SECRET);
+    if (!decoded) return res.status(400).json({ error: 'Token inválido' });
+
+    const { id } = decoded;
+    
+    try {
+        const response = await this.userModel.update({ id, input: { isVerified: true } });
+        res.status(200).json({ message: 'Usuario verificado' });
+    } catch (error) {
+      catchAndResponseError(error, res);
+    }
+    
+  }
+
+  createToken = ({ id, role }) => {
+    return jwt.sign({ id: id, role: role }, JWT_SECRET, { expiresIn: '1d' });
   }
 
 }

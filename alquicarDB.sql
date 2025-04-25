@@ -19,7 +19,8 @@ CREATE TABLE users(
     phone VARCHAR(9) NOT NULL UNIQUE,
     role ENUM('admin', 'user') NOT NULL DEFAULT 'user',
     created_at TIMESTAMP DEFAULT NOW(),
-    dni VARCHAR(9) NOT NULL UNIQUE
+    dni VARCHAR(9) NOT NULL UNIQUE,
+    isVerified BOOLEAN DEFAULT FALSE,
     );
 
 

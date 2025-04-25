@@ -16,6 +16,7 @@ export const createAuthRouter = ({ userModel }) => {
 
     authRouter.post('/register', authController.register);
     authRouter.post('/login', authController.login);
+    authRouter.get('/verify', authController.verifyAccount);
 
     return authRouter;
 }
