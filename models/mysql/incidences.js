@@ -26,7 +26,7 @@ export class IncidenceModel {
         try {
 
             const [incidence, tableInfo] = await conn.query(
-                'SELECT *, BIN_TO_UUID(owner_id) AS owner_id FROM incidences WHERE id = ?', [id]);
+                'SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences WHERE id = ?', [id]);
             return incidence;
 
         } catch (e) {
@@ -41,48 +41,39 @@ export class IncidenceModel {
     static async create({ input }) {
 
         const {
-            owner_id,
-            brand,
-            model,
-            year,
+            from_id,
+            to_id,
+            reservation_id,
+            description,
             type,
-            transmission,
-            fuel_type,
-            capacity,
-            num_doors,
-            daily_price,
+            status,
+            created_at
         } = input;
 
 
-        const existsOwner = await existOwner(owner_id);
 
-        if(!existsOwner){
-            return {
-                success: false,
-                message: 'Owner Id does not exist'
-            };
-        }
-
-
-        const optionalFields = ["deposit", "availability", "registration_date"];
+        const optionalFields = ["to_id", "reservation_id", "created_at"];
         const fields = [
-            "owner_id", "brand", "model", "year", "type", "transmission",
-            "fuel_type", "capacity", "num_doors", "daily_price"
+            "from_id", "description", "type", "status"
         ];
+        
         const values = [
-            "UUID_TO_BIN(?)", "?", "?", "?", "?", "?",
-            "?", "?", "?", "?"
+            "UUID_TO_BIN(?)", "?", "?", "?"
         ];
+        
         const params = [
-            owner_id, brand, model, year, type, transmission,
-            fuel_type, capacity, num_doors, daily_price
+            from_id, description, type, status
         ];
 
         // Agregar los campos opcionales solo si están definidos
         optionalFields.forEach(field => {
             if (input[field] !== undefined) {
                 fields.push(field);
-                values.push("?");
+                if (field === "to_id") {
+                    values.push("UUID_TO_BIN(?)");
+                } else {
+                    values.push("?");
+                }
                 params.push(input[field]);
             }
         });
@@ -109,21 +100,15 @@ export class IncidenceModel {
     }
 
 
-    static async update({id, input}){
+    static async update({id, input}){     
 
-        if(input.owner_id){
-            const exist = await existOwner(input.owner_id)
-            if(!exist){
-                return {
-                    success: false,
-                    message: 'Owner Id does not exist'
-                };
+        const fields = Object.keys(input).map(field => {
+            if (field === "from_id" || field === "to_id") {
+                return `${field} = UUID_TO_BIN(?)`;
+            } else {
+                return `${field} = ?`;
             }
-        }      
-
-        const fields = Object.keys(input).map(field => 
-            field === "owner_id" ? `${field} = UUID_TO_BIN(?)` : `${field} = ?`
-        );
+        });
         const values = Object.values(input);
         //const updates = fields.map((field, index) => `${field} = ?`).join(', ');
 
