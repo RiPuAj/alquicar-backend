@@ -121,6 +121,10 @@ export class AuthController {
 
       if (!passwordComparation) res.status(401).json({ error: 'Contraseña incorrecta' });
 
+      if(!user.isVerified) {
+        return res.status(401).json({ error: 'Usuario no verificado' });
+      }
+
       const token = this.createToken({ id: user.id, role: user.role });
 
 
