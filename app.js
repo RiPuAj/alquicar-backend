@@ -8,7 +8,8 @@ import { createReservationRouter } from './routes/reservations.js';
 import { ReservationModel } from './models/mysql/reservations.js';
 import { createVehicleRouter } from './routes/vehicles.js';
 import { VehicleModel } from './models/mysql/vehicle.js';
-import { authRouter } from './routes/auth.js';
+import { createAuthRouter } from './routes/auth.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config({path: './.env'});
 
@@ -18,12 +19,13 @@ const options = {
   };
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.disable('x-powered-by');
 
 app.use('/users', createUserRouter({userModel: UserModel}));
 app.use('/reservations', createReservationRouter({reservationModel: ReservationModel}));
 app.use('/vehicles', createVehicleRouter({vehicleModel: VehicleModel}));
-app.use('/auth', authRouter);
+app.use('/auth', createAuthRouter({userModel: UserModel}));
 
 app.use((req, res) => {
     res.status(404).send('<h1>404 Not Found</h1>');

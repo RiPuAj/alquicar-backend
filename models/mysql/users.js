@@ -93,6 +93,7 @@ export class UserModel{
         }
 
         try{
+            console.log(id, name, email, password, address, phone, role, dni);
             await conn.query(`
                 INSERT INTO users (id, name, email, password, address, phone, role, dni)
                 VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?)`, [id, name, email, password, address, phone, role, dni]);
@@ -101,6 +102,7 @@ export class UserModel{
             return {success: true, message: 'User created', user: user};
 
         } catch(e){
+            console.log(e);
             console.log(e.code);
             //TODO: manejar error
             handlerDatabaseError({err: e});            
