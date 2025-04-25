@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: "smtp.gmail.com",
   auth: {
     user: process.env.EMAIL_USER, // tu correo
     pass: process.env.EMAIL_PASS  // una contraseña de aplicación
