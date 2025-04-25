@@ -166,5 +166,20 @@ Content-Type: application/json
   "phone": "924361924",
   "dni": "43543271Z"
 }
+
+###
+
+POST https://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "email": "javipulido15@gmail.com",
+  "password": "Nicoloco",
+  "address": "sevilla",
+  "phone": "924323924",
+  "dni": "43543223Z"
+}
+
 ###
 GET https://localhost:3000/users/email/juanito@gmail.com
