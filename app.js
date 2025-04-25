@@ -10,6 +10,7 @@ import { createVehicleRouter } from './routes/vehicles.js';
 import { VehicleModel } from './models/mysql/vehicle.js';
 import { createAuthRouter } from './routes/auth.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 dotenv.config({path: './.env'});
 
