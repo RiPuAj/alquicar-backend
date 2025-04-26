@@ -65,7 +65,7 @@ export class UserModel{
         try{
 
             const [users, tableInfo] = await conn.query(
-                'SELECT BIN_TO_UUID(id) AS id, name, email, password, address, phone, role, dni FROM users WHERE email = ?',  [email]);
+                'SELECT BIN_TO_UUID(id) AS id, name, email, password, address, phone, role, dni, isVerified FROM users WHERE email = ?',  [email]);
             return users[0];
 
         }catch(e){
@@ -102,6 +102,7 @@ export class UserModel{
         }
 
         try{
+            console.log(id, name, email, password, address, phone, role, dni);
             await conn.query(`
                 INSERT INTO users (id, name, email, password, address, phone, role, dni)
                 VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?, ?)`, [id, name, email, password, address, phone, role, dni]);
@@ -110,9 +111,10 @@ export class UserModel{
             return {success: true, message: 'User created', user: user};
 
         } catch(e){
+            console.log(e);
             console.log(e.code);
             //TODO: manejar error
-            handlerDatabaseError({err: e});            
+            handlerDatabaseError({error: e});            
         }
         
     }
@@ -133,7 +135,7 @@ export class UserModel{
                 `UPDATE users SET ${updates} WHERE id = UUID_TO_BIN(?)`, [...values, id]);
         }catch(e){
             console.log(e);
-            handlerDatabaseError({err: {message: 'Error updating user'}});
+            handlerDatabaseError({error: {message: 'Error updating user'}});
             //TODO: manejar error
         } 
         
@@ -151,7 +153,7 @@ export class UserModel{
         
         } catch(e){
             // TODO Manejar error
-            handlerDatabaseError({err: {message: 'Error deleting user'}});
+            handlerDatabaseError({error: {message: 'Error deleting user'}});
         }
 
     }

@@ -155,15 +155,70 @@ Content-Type: application/json
 }
 
 ###
+POST https://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "email": "jav@gl.com",
+  "password": "Nicoloco",
+  "address": "sevilla",
+  "phone": "924361924",
+  "dni": "43543271Z"
+}
+
+###
+
+POST https://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "email": "javipulido15@gmail.com",
+  "password": "Nicoloco",
+  "address": "sevilla",
+  "phone": "924323924",
+  "dni": "43543223Z"
+}
+
+###
+POST https://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "javipulido15@gmail.com",
+  "password": "Nicoloco"
+}
+
+###
 GET https://localhost:3000/users/email/juanito@gmail.com
 
 ###
 GET https://localhost:3000/users/getdata/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEzMTZmMjFiLTIyOTItMTFmMC05YzU3LTBhMDAyNzAwMDAxMSIsImlhdCI6MTc0NTY3MjA1MCwiZXhwIjoxNzQ1NzU4NDUwfQ.udnVTlN5YVloG_sN40HJsb1QsWva5JJ-EayrpFcIR8c
 
-###
 POST https://localhost:3000/media/create
 Content-Type: application/json
 
 {
   "id": "a316f21b-2292-11f0-9c57-0a0027000011"
+}
+
+###
+###
+POST https://localhost:3000/vehicles/publish
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI1OTNjYzkyLTIxMmItMTFmMC1hZWYyLTU5OWIwMjM1MDU3YiIsImlhdCI6MTc0NTUxMzIxNCwiZXhwIjoxNzQ1NTk5NjE0fQ.0Bt0r8OxQ2sDUPwN-Gv9w6gbLKE8SkSiDx5TjaW10Gw",
+  "brand": "Toyota",
+  "model": "YARIS",
+  "year": 1991,
+  "type": "Sports",
+  "latitude": 0,
+  "longitude": 0,
+  "transmission": "Manual",
+  "fuel_type": "Diesel",
+  "capacity": 5,
+  "num_doors": 4,
+  "daily_price": 30
 }
