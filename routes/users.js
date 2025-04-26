@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/users.js";
+import { authMiddleware } from "../middlewares/auth.js";
 
 export const createUserRouter = ({userModel}) => {
 
@@ -8,11 +9,11 @@ export const createUserRouter = ({userModel}) => {
 
     userRouter.get("/", userController.getAll);
     userRouter.get("/getdata/:token", userController.getData)
-    userRouter.get("/:id", userController.getById);
+    userRouter.get("/:id", authMiddleware, userController.getById);
     userRouter.get("/email/:email", userController.getByEmail);
     userRouter.post("/", userController.create);
-    userRouter.patch("/:id", userController.update);
-    userRouter.delete("/:id", userController.delete);
+    userRouter.patch("/:id", authMiddleware, userController.update);
+    userRouter.delete("/:id", authMiddleware, userController.delete);
 
     
 
