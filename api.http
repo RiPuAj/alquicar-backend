@@ -184,6 +184,15 @@ Content-Type: application/json
 }
 
 ###
+POST https://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "javipulido15@gmail.com",
+  "password": "Nicoloco"
+}
+
+###
 GET https://localhost:3000/users/email/juanito@gmail.com
 
 ###
