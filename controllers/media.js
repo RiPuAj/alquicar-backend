@@ -1,12 +1,12 @@
-import { MediaModel } from "../models/mysql/media";
+import { MediaModel } from "../models/mysql/media.js";
 export class MediaController {
     constructor({ mediaModel }) {
         this.mediaModel = mediaModel;
     }
     create = async ( req, res ) => {
         const data = req.body;
-
-        this.mediaModel.create();
-
+        const resp = await this.mediaModel.create({ input: data });
+        return res.json(resp);
+        
     }
 }

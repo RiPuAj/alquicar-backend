@@ -10,6 +10,8 @@ import { createVehicleRouter } from './routes/vehicles.js';
 import { VehicleModel } from './models/mysql/vehicle.js';
 import cors from 'cors';
 import { authRouter } from './routes/auth.js';
+import { createMediaRouter } from './routes/media.js';
+import { MediaModel } from './models/mysql/media.js';
 
 dotenv.config({path: './.env'});
 
@@ -25,6 +27,7 @@ app.use('/users', createUserRouter({userModel: UserModel}));
 app.use('/reservations', createReservationRouter({reservationModel: ReservationModel}));
 app.use('/vehicles', createVehicleRouter({vehicleModel: VehicleModel, userModel: UserModel}));
 app.use('/auth', authRouter);
+app.use('/media', createMediaRouter({ mediaModel: MediaModel}));
 
 app.use((req, res) => {
     res.status(404).send('<h1>404 Not Found</h1>');
