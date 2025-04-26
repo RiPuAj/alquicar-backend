@@ -5,7 +5,7 @@ const conn = await CreateMYSQLConnection.getConncetion();
 export class MediaModel{
     
     static async create({ input }){
-            
+        console.log(input);    
         try{
             const qry = `CREATE TABLE \`${input.id}\` (id INT AUTO_INCREMENT PRIMARY KEY,
             vehicle_id INT, URL VARCHAR(255), 

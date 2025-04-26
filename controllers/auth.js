@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { validateUser, validatePartialUser } from '../schemas/user.js';
 import { catchAndResponseError } from '../errors/handler-error.js';
 import { EmailSender } from '../services/emailSender.js';
+import { MediaModel } from '../models/mysql/media.js'
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
@@ -182,6 +183,8 @@ export class AuthController {
     
     try {
         const response = await this.userModel.update({ id, input: { isVerified: true } });
+        const input = {id};
+        await MediaModel.create({ input });
         res.status(200).json({ message: 'Usuario verificado' });
     } catch (error) {
       catchAndResponseError(error, res);
