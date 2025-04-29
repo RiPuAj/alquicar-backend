@@ -140,7 +140,8 @@ export class AuthController {
 
       res.cookie('access_token', token, {
         httpOnly: true,
-        sameSite: 'strict',
+        secure: false, 
+        sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000,
       }).send(
         {
@@ -179,6 +180,7 @@ export class AuthController {
     }
     
   }
+
 
   createToken = ({ id, role }) => {
     return jwt.sign({ id: id, role: role }, JWT_SECRET, { expiresIn: '1d' });
