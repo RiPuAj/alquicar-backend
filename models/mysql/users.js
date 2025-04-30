@@ -56,7 +56,7 @@ export class UserModel{
         try{
 
             const [users, tableInfo] = await conn.query(
-                'SELECT BIN_TO_UUID(id) AS id, name, email, password, address, phone, role, dni FROM users WHERE email = ?',  [email]);
+                'SELECT BIN_TO_UUID(id) AS id, name, email, password, address, phone, role, dni, isVerified FROM users WHERE email = ?',  [email]);
             return users[0];
 
         }catch(e){
