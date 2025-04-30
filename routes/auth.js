@@ -1,12 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/auth.js';
 
-/*
-export const authRouter = Router();
-
-authRouter.post('/register', AuthController.register);
-authRouter.post('/login', AuthController.login);*/
-
 
 export const createAuthRouter = ({ userModel }) => {
 
@@ -17,6 +11,7 @@ export const createAuthRouter = ({ userModel }) => {
     authRouter.post('/register', authController.register);
     authRouter.post('/login', authController.login);
     authRouter.get('/verify', authController.verifyAccount);
+    authRouter.get('/verifyToken', authController.isAuthenticated);
 
     return authRouter;
 }

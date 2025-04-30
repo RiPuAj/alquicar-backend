@@ -120,7 +120,6 @@ export class AuthController {
 
     try {
       const user = await this.userModel.getByEmailWithPass({ email: req.body.email });
-      console.log(user);
 
 
       if (!user) {
@@ -130,7 +129,7 @@ export class AuthController {
       const passwordComparation = await bcrypt.compare(req.body.password, user.password);
 
       if (!passwordComparation) res.status(401).json({ error: 'Contraseña incorrecta' });
-
+      
       if(!user.isVerified) {
         return res.status(401).json({ error: 'Usuario no verificado' });
       }
@@ -140,6 +139,7 @@ export class AuthController {
 
       res.cookie('access_token', token, {
         httpOnly: true,
+        secure: false,
         sameSite: 'strict',
         maxAge: 24 * 60 * 60 * 1000,
       }).send(
@@ -178,6 +178,21 @@ export class AuthController {
       catchAndResponseError(error, res);
     }
     
+  }
+
+  isAuthenticated = async (req, res) => {
+    const token = req.cookies.access_token;
+
+    if (!token) return res.status(401).json({ error: 'No autenticado' });
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const user = await this.userModel.getById({ id: decoded.id });
+      if (!user) return res.status(401).json({ error: 'No autenticado' });
+      res.status(200).json({ user: user });
+      
+    } catch (error) {
+      catchAndResponseError(error, res);
+    }
   }
 
   createToken = ({ id, role }) => {
