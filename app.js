@@ -21,11 +21,6 @@ import { MessagesModel } from './models/mysql/messages.js';
 
 dotenv.config({ path: './.env' });
 
-const options = {
-  key: fs.readFileSync('backkey.pem'),
-  cert: fs.readFileSync('backcert.pem')
-}
-
 
 const app = express();
 app.use(express.json());
@@ -35,6 +30,7 @@ app.use(cors({
   origin: true,
   credentials: true, 
 }));
+
 app.use('/users', createUserRouter({ userModel: UserModel }));
 app.use('/reservations', createReservationRouter({ reservationModel: ReservationModel }));
 app.use('/vehicles', createVehicleRouter({ vehicleModel: VehicleModel }));
@@ -45,9 +41,8 @@ app.use((req, res) => {
 })
 
 
-const server = https.createServer(options, app);
 
-//const server = http.createServer(app);
+const server = http.createServer(app);
 const io = WebSocketServerCreator.createConnection({ server });
 io.use(authMiddlewareSocket);
 createSocketEvents({ io, socketModel: SocketsModel });
