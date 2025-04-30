@@ -2,8 +2,6 @@ import express from 'express';
 import http from 'http';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import { corsConfig } from './config/corsConfig.js';
 import { WebSocketServerCreator } from './sockets/webSocketServerCreator.js';
 import { createSocketEvents } from './sockets/socketEvents.js';
 import { SocketsModel } from './models/mysql/sockets.js';
@@ -25,6 +23,7 @@ import {
   VehicleModel,
   IncidenceModel
 } from './models/mysql/index.js';
+import { corsMiddlewares } from './middlewares/cors.js';
 
 dotenv.config({ path: './.env' });
 
@@ -32,7 +31,7 @@ dotenv.config({ path: './.env' });
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors(corsConfig));
+app.use(corsMiddlewares());
 app.disable('x-powered-by');
 
 app.use('/users', createUserRouter({ userModel: UserModel }));
@@ -49,6 +48,7 @@ app.use((req, res) => {
 
 const server = http.createServer(app);
 const io = WebSocketServerCreator.createConnection({ server });
+io.use(corsMiddlewares());
 io.use(authMiddlewareSocket);
 createSocketEvents({ io, socketModel: SocketsModel });
 createMessagesEvents({ io, messagesModel: MessagesModel });

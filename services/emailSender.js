@@ -34,7 +34,7 @@ export class EmailSender {
             html: `
               <h3>Hola ${name}</h3>
               <p>Gracias por registrarte. Haz clic en el siguiente enlace para confirmar tu cuenta:</p>
-              <a href="https://localhost:3000/auth/verify?token=${token}">Confirmar cuenta</a>
+              <a href="http://localhost:3000/auth/verify?token=${token}">Confirmar cuenta</a>
             `
           });    
     }
