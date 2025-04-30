@@ -1,14 +1,14 @@
 ###
-GET https://localhost:3000/users
+GET http://localhost:3000/users
 
 ###
-GET https://localhost:3000/vehicles/
+GET http://localhost:3000/vehicles/
 
 ###
-GET https://localhost:3000/vehicles/6
+GET http://localhost:3000/vehicles/6
 
 ###
-POST https://localhost:3000/vehicles/
+POST http://localhost:3000/vehicles/
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 
 ###
-POST https://localhost:3000/users
+POST http://localhost:3000/users
 Content-Type: application/json
 
 {
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH https://localhost:3000/users/234e4567-e89b-12d3-a456-426614174111
+PATCH http://localhost:3000/users/234e4567-e89b-12d3-a456-426614174111
 Content-Type: application/json
 
 {
@@ -52,20 +52,20 @@ Content-Type: application/json
 }
 
 ###
-DELETE https://localhost:3000/users/88985a11-1c37-11f0-9c57-0a0027000011
+DELETE http://localhost:3000/users/88985a11-1c37-11f0-9c57-0a0027000011
 
 
 ###
-GET https://localhost:3000/reservations
+GET http://localhost:3000/reservations
 
 ###
-GET https://localhost:3000/reservations/2
+GET http://localhost:3000/reservations/2
 
 ###
-GET https://localhost:3000/reservations/3
+GET http://localhost:3000/reservations/3
 
 ### 
-POST https://localhost:3000/reservations
+POST http://localhost:3000/reservations
 Content-Type: application/json
 
 {
@@ -77,7 +77,7 @@ Content-Type: application/json
 }
 
 ###
-POST https://localhost:3000/reservations
+POST http://localhost:3000/reservations
 Content-Type: application/json
 
 {
@@ -90,7 +90,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH https://localhost:3000/reservations/5
+PATCH http://localhost:3000/reservations/5
 Content-Type: application/json
 
 {
@@ -99,7 +99,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH https://localhost:3000/reservations/4
+PATCH http://localhost:3000/reservations/4
 Content-Type: application/json
 
 {
@@ -109,22 +109,22 @@ Content-Type: application/json
 }
 
 ###
-GET https://localhost:3000/reservations/4
+GET http://localhost:3000/reservations/4
 
 ###
-DELETE https://localhost:3000/reservations/5
+DELETE http://localhost:3000/reservations/5
 
 ###
-GET https://localhost:3000/reservations/vehicle/2
+GET http://localhost:3000/reservations/vehicle/2
 
 ###
-GET https://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
+GET http://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
 
 ###
-GET https://localhost:3000/users/email/pepito@gmail.com
+GET http://localhost:3000/users/email/pepito@gmail.com
 
 ###
-POST https://localhost:3000/auth/login
+POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
@@ -133,7 +133,7 @@ Content-Type: application/json
 }
 
 ###
-POST https://localhost:3000/auth/register
+POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
@@ -146,7 +146,7 @@ Content-Type: application/json
 }
 
 ###
-POST https://localhost:3000/auth/login
+POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
@@ -155,7 +155,7 @@ Content-Type: application/json
 }
 
 ###
-POST https://localhost:3000/auth/register
+POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
@@ -169,7 +169,7 @@ Content-Type: application/json
 
 ###
 
-POST https://localhost:3000/auth/register
+POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
@@ -182,7 +182,7 @@ Content-Type: application/json
 }
 
 ###
-POST https://localhost:3000/auth/login
+POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
@@ -191,13 +191,13 @@ Content-Type: application/json
 }
 
 ###
-GET https://localhost:3000/users/email/juanito@gmail.com
+GET http://localhost:3000/users/email/juanito@gmail.com
 
 ###
-GET https://localhost:3000/users/getdata/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEzMTZmMjFiLTIyOTItMTFmMC05YzU3LTBhMDAyNzAwMDAxMSIsImlhdCI6MTc0NTY3MjA1MCwiZXhwIjoxNzQ1NzU4NDUwfQ.udnVTlN5YVloG_sN40HJsb1QsWva5JJ-EayrpFcIR8c
+GET http://localhost:3000/users/getdata/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEzMTZmMjFiLTIyOTItMTFmMC05YzU3LTBhMDAyNzAwMDAxMSIsImlhdCI6MTc0NTY3MjA1MCwiZXhwIjoxNzQ1NzU4NDUwfQ.udnVTlN5YVloG_sN40HJsb1QsWva5JJ-EayrpFcIR8c
 
 ###
-POST https://localhost:3000/media/create
+POST http://localhost:3000/media/create
 Content-Type: application/json
 
 {
@@ -206,7 +206,7 @@ Content-Type: application/json
 
 
 ###
-POST https://localhost:3000/vehicles/publish
+POST http://localhost:3000/vehicles/publish
 Content-Type: application/json
 
 {
@@ -225,14 +225,14 @@ Content-Type: application/json
 }
 
 ###
-POST https://localhost:3000/media/upload/4f26536a-25c4-11f0-9d8a-dee3d78c366c
+POST http://localhost:3000/media/upload/4f26536a-25c4-11f0-9d8a-dee3d78c366c
 Content-Type: multipart/form-data
 Form Data:
 - image: [~/Desktop/PortadaDarkAlley.png]
 
 
 ###
-GET https://localhost:3000/media/profile/4f26536a-25c4-11f0-9d8a-dee3d78c366c
+GET http://localhost:3000/media/profile/4f26536a-25c4-11f0-9d8a-dee3d78c366c
 
 ###
-GET https://localhost:3000/media/vehicles/4f26536a-25c4-11f0-9d8a-dee3d78c366c/2
+GET http://localhost:3000/media/vehicles/4f26536a-25c4-11f0-9d8a-dee3d78c366c/2

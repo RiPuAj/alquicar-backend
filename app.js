@@ -1,41 +1,63 @@
 import express from 'express';
+import http from 'http';
 import dotenv from 'dotenv';
-import fs from 'fs';
-import https from 'https';
-import { createUserRouter } from './routes/users.js';
-import { UserModel } from './models/mysql/users.js';
-import { createReservationRouter } from './routes/reservations.js';
-import { ReservationModel } from './models/mysql/reservations.js';
-import { createVehicleRouter } from './routes/vehicles.js';
-import { VehicleModel } from './models/mysql/vehicle.js';
-import { createAuthRouter } from './routes/auth.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { createMediaRouter } from './routes/media.js';
 import { MediaModel } from './models/mysql/media.js';
+import { WebSocketServerCreator } from './sockets/webSocketServerCreator.js';
+import { createSocketEvents } from './sockets/socketEvents.js';
+import { SocketsModel } from './models/mysql/sockets.js';
+import { authMiddlewareSocket } from './middlewares/auth.js';
+import { createMessagesEvents } from './sockets/messagesEvents.js';
+import { MessagesModel } from './models/mysql/messages.js';
 
-dotenv.config({path: './.env'});
+import {
+  createUserRouter,
+  createReservationRouter,
+  createVehicleRouter,
+  createAuthRouter,
+  createIncidenceRouter
+} from './routes/index.js';
 
-const options = {
-    key: fs.readFileSync('backkey.pem'),
-    cert: fs.readFileSync('backcert.pem'),
-  };
+import {
+  UserModel,
+  ReservationModel,
+  VehicleModel,
+  IncidenceModel
+} from './models/mysql/index.js';
+
+dotenv.config({ path: './.env' });
+
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: '*',
+  credentials: true,
+}));
 app.disable('x-powered-by');
-app.use(cors());
 
-app.use('/users', createUserRouter({userModel: UserModel}));
-app.use('/reservations', createReservationRouter({reservationModel: ReservationModel}));
-app.use('/vehicles', createVehicleRouter({vehicleModel: VehicleModel}));
-app.use('/auth', createAuthRouter({userModel: UserModel}));
+app.use('/users', createUserRouter({ userModel: UserModel }));
+app.use('/reservations', createReservationRouter({ reservationModel: ReservationModel }));
+app.use('/vehicles', createVehicleRouter({ vehicleModel: VehicleModel }));
+app.use('/auth', createAuthRouter({ userModel: UserModel }));
 app.use('/media', createMediaRouter({ mediaModel: MediaModel}));
+app.use('/incidences', createIncidenceRouter({ incidenceModel: IncidenceModel }))
 
 app.use((req, res) => {
-    res.status(404).send('<h1>404 Not Found</h1>');
+  res.status(404).send('<h1>404 Not Found</h1>');
 })
 
-https.createServer(options, app).listen(process.env.PORT, () => {
-    console.log(`Servidor HTTPS activo en https://localhost:${process.env.PORT}`);
-  });
+
+
+const server = http.createServer(app);
+const io = WebSocketServerCreator.createConnection({ server });
+io.use(authMiddlewareSocket);
+createSocketEvents({ io, socketModel: SocketsModel });
+createMessagesEvents({ io, messagesModel: MessagesModel });
+
+server.listen(process.env.PORT, () => {
+  console.log(`Servidor HTTPS activo en https://localhost:${process.env.PORT}`);
+});
