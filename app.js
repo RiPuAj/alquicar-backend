@@ -1,5 +1,6 @@
 import express from 'express';
 import http from 'http';
+import http from 'http';
 import { createUserRouter } from './routes/users.js';
 import { UserModel } from './models/mysql/users.js';
 import { createReservationRouter } from './routes/reservations.js';
@@ -11,11 +12,16 @@ import { createIncidenceRouter } from './routes/incidences.js';
 import { IncidenceModel} from './models/mysql/incidences.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import { WebSocketServerCreator } from './sockets/webSocketServerCreator.js';
+import { createSocketEvents } from './sockets/socketEvents.js';
+import { SocketsModel } from './models/mysql/sockets.js';
+import { authMiddlewareSocket } from './middlewares/auth.js';
+import { createMessagesEvents } from './sockets/messagesEvents.js';
+import { MessagesModel } from './models/mysql/messages.js';
 
-dotenv.config({path: './.env'});
+dotenv.config({ path: './.env' });
 
-  
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -24,7 +30,10 @@ app.use(cors({
   credentials: true,
 }));
 app.disable('x-powered-by');
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true, 
+}));
 
 app.use('/users', createUserRouter({userModel: UserModel}));
 app.use('/reservations', createReservationRouter({reservationModel: ReservationModel}));
@@ -33,10 +42,17 @@ app.use('/auth', createAuthRouter({userModel: UserModel}));
 app.use('/incidences', createIncidenceRouter({incidenceModel: IncidenceModel}))
 
 app.use((req, res) => {
-    res.status(404).send('<h1>404 Not Found</h1>');
+  res.status(404).send('<h1>404 Not Found</h1>');
 })
 
 
-http.createServer(app).listen(process.env.PORT, () => {
-    console.log(`Servidor HTTP activo en http://localhost:${process.env.PORT}`);
-  });
+
+const server = http.createServer(app);
+const io = WebSocketServerCreator.createConnection({ server });
+io.use(authMiddlewareSocket);
+createSocketEvents({ io, socketModel: SocketsModel });
+createMessagesEvents({ io, messagesModel: MessagesModel });
+
+server.listen(process.env.PORT, () => {
+  console.log(`Servidor HTTPS activo en https://localhost:${process.env.PORT}`);
+});

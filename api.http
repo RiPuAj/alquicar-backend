@@ -171,7 +171,7 @@ Content-Type: application/json
 
 ###
 
-POST https://localhost:3000/auth/register
+POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
@@ -216,3 +216,6 @@ Content-Type: application/json
   "num_doors": 4,
   "daily_price": 30
 }
+
+
+
