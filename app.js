@@ -1,5 +1,4 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import http from 'http';
 import { createUserRouter } from './routes/users.js';
 import { UserModel } from './models/mysql/users.js';
@@ -12,6 +11,7 @@ import { createIncidenceRouter } from './routes/incidences.js';
 import { IncidenceModel} from './models/mysql/incidences.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 dotenv.config({path: './.env'});
 
@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: '*',
   credentials: true,
 }));
 app.disable('x-powered-by');
@@ -38,5 +38,5 @@ app.use((req, res) => {
 
 
 http.createServer(app).listen(process.env.PORT, () => {
-    console.log(`Servidor HTTP activo en http://localhost:${process.env.PORT_HTTP}`);
+    console.log(`Servidor HTTP activo en http://localhost:${process.env.PORT}`);
   });
