@@ -1,5 +1,5 @@
 import { handlerDatabaseError } from '../../errors/handler-error.js';
-import { CreateMYSQLConnection } from './mysql-config.js';
+import { CreateMYSQLConnection } from './connectionCreater.js';
 
 
 

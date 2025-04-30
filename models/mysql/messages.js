@@ -1,4 +1,4 @@
-import { CreateMYSQLConnection } from "./mysql-config.js";
+import { CreateMYSQLConnection } from "./connectionCreater.js";
 
 const conn = await CreateMYSQLConnection.getConncetion();
 

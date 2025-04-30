@@ -1,7 +1,7 @@
 import { validateReservation, validatePartialReservation } from '../../schemas/reservations.js';
 import {handlerDatabaseError } from '../../errors/handler-error.js';
 import { ValidationError } from '../../errors/validation-error.js';
-import { CreateMYSQLConnection } from './mysql-config.js';
+import { CreateMYSQLConnection } from './connectionCreater.js';
 import { DatabaseError } from '../../errors/database-error.js';
 
 

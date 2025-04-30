@@ -1,6 +1,6 @@
-import { Server } from "socket.io"
-import { createServer } from "http";
+import { Server } from "socket.io";
 import dotenv from "dotenv";
+import { corsConfig } from "../config/corsConfig.js";
 
 dotenv.config({ path: './.env' });
 
@@ -11,11 +11,7 @@ export class WebSocketServerCreator {
         console.log(this.webSocketServer)
         if (!this.webSocketServer) {
             this.webSocketServer = new Server(server, {
-                cors: {
-                    origin: true,
-                    methods: ["GET", "POST"],
-                    withCredentials: true,
-                }
+                cors: corsConfig,
             });
         }
         return this.webSocketServer;

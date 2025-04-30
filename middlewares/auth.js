@@ -18,13 +18,18 @@ export const authMiddleware = (req, res, next) => {
 
 export const authMiddlewareSocket = (socket, next) => {
 
-  const cookies = socket.handshake.headers.cookie;
+  try{
+    const cookies = socket.handshake.headers.cookie;
 
   if (!cookies) return disconnectSocket(socket, 'Falta cookies');
 
   const token = cookies.split('; ').find(row => row.startsWith('access_token=')).split('=')[1];
-  
+
   if (!token) return disconnectSocket(socket, 'Falta token');
+  } catch (e) {
+    
+    return disconnectSocket(socket, 'Falta token');
+  }
 
   next();
 }

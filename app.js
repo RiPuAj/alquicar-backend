@@ -3,6 +3,7 @@ import http from 'http';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { corsConfig } from './config/corsConfig.js';
 import { WebSocketServerCreator } from './sockets/webSocketServerCreator.js';
 import { createSocketEvents } from './sockets/socketEvents.js';
 import { SocketsModel } from './models/mysql/sockets.js';
@@ -31,10 +32,7 @@ dotenv.config({ path: './.env' });
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: '*',
-  credentials: true,
-}));
+app.use(cors(corsConfig));
 app.disable('x-powered-by');
 
 app.use('/users', createUserRouter({ userModel: UserModel }));
@@ -56,5 +54,5 @@ createSocketEvents({ io, socketModel: SocketsModel });
 createMessagesEvents({ io, messagesModel: MessagesModel });
 
 server.listen(process.env.PORT, () => {
-  console.log(`Servidor HTTPS activo en https://localhost:${process.env.PORT}`);
+  console.log(`Servidor HTTPS activo en http://localhost:${process.env.PORT}`);
 });
