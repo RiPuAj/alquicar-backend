@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config({path: '../.env'});
+dotenv.config({ path: './.env' });
 
 export const mysqlConfig = {
     host: process.env.DB_HOST,
@@ -9,3 +9,5 @@ export const mysqlConfig = {
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
 };
+
+console.log(mysqlConfig);

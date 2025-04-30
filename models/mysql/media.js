@@ -1,7 +1,9 @@
 import { handlerDatabaseError } from '../../errors/handler-error.js';
-import { CreateMYSQLConnection } from './mysql-config.js';
+import { CreateMYSQLConnection } from './connectionCreater.js';
 import fs from 'fs'
 import { promisify } from 'util';
+
+
 const conn = await CreateMYSQLConnection.getConncetion();
 const readFile = promisify(fs.readFile);
 export class MediaModel{
