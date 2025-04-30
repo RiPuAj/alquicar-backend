@@ -1,5 +1,5 @@
 import { handlerDatabaseError } from '../../errors/handler-error.js';
-import { CreateMYSQLConnection } from './mysql-config.js';
+import { CreateMYSQLConnection } from './connectionCreater.js';
 import { v4 as uuidv4, parse, stringify } from 'uuid';
 const conn = await CreateMYSQLConnection.getConncetion();
 export class UserModel{

@@ -1,5 +1,8 @@
 import { validateUser, validatePartialUser } from '../schemas/user.js';
 import { DatabaseError } from '../errors/database-error.js';
+import { catchAndResponseError } from '../errors/handler-error.js';
+import { getTokenInfo } from '../utils/tokens.js';
+import cookieParser from 'cookie-parser';
 
 
 export class UserController {
@@ -8,23 +11,26 @@ export class UserController {
         this.userModel = userModel;
     }
 
-    getData = async(req, res)=>{
+    getData = async (req, res) => {
+        const token = req.cookies.access_token;
+
+        if (!token) {
+            return res.status(400).json({ message: 'Token no proporcionado' });
+        }
+
+        const tokenInfo = getTokenInfo(token);
+
         try {
-            const token = req.params.token;
-            if (!token) {
-                return res.status(400).json({ message: 'Token no proporcionado' });
-              }
-            const data = await this.userModel.getData({token});
-            console.log(data)
-            return res.json(data);
+            const userData = await this.userModel.getById({ id: tokenInfo.id });
+            return res.json(userData);
         } catch (error) {
-            
+            catchAndResponseError(error, res);
         }
     }
 
     getAll = async (req, res) => {
 
-        try{
+        try {
             const allUsers = await this.userModel.getAll();
             return res.json(allUsers);
         } catch (e) {
@@ -37,18 +43,18 @@ export class UserController {
 
     getById = async (req, res) => {
         const { id } = req.params;
-        
-        try{
-        
+
+        try {
+
             const user = await this.userModel.getById({ id });
-            
+
             if (user.length === 0) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            
+
             return res.json(user);
         } catch (e) {
-            
+
             if (e instanceof DatabaseError) {
                 return res.status(500).json({ error: e.message });
             }
@@ -59,38 +65,38 @@ export class UserController {
     }
     getByEmail = async (req, res) => {
         const { email } = req.params;
-        try{
+        try {
             const users = await this.userModel.getByEmail({ email })
             if (users.length === 0) {
                 return res.status(404).json({ error: 'User not found' });
             }
             return res.json(users);
-        }catch{
+        } catch (e) {
             if (e instanceof DatabaseError) {
                 return res.status(500).json({ error: e.message });
             }
 
             console.log(e);
         }
-        
+
     }
 
     getByEmailWithPass = async (req, res) => {
         const { email } = req.params;
-        try{
+        try {
             const users = await this.userModel.getByEmailWithPass({ email })
             if (users.length === 0) {
                 return res.status(404).json({ error: 'User not found' });
             }
             return res.json(users);
-        }catch{
+        } catch (e) {
             if (e instanceof DatabaseError) {
                 return res.status(500).json({ error: e.message });
             }
 
             console.log(e);
         }
-        
+
     }
 
     create = async (req, res) => {
