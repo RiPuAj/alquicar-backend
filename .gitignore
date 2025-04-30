@@ -2,8 +2,5 @@ node_modules/
 *.iml
 .idea/
 *.log
-<<<<<<< HEAD
 .env
-=======
-.env
->>>>>>> Feature-Login
+assets/*

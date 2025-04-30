@@ -223,3 +223,16 @@ Content-Type: application/json
   "num_doors": 4,
   "daily_price": 30
 }
+
+###
+POST https://localhost:3000/media/upload/4f26536a-25c4-11f0-9d8a-dee3d78c366c
+Content-Type: multipart/form-data
+Form Data:
+- image: [~/Desktop/PortadaDarkAlley.png]
+
+
+###
+GET https://localhost:3000/media/profile/4f26536a-25c4-11f0-9d8a-dee3d78c366c
+
+###
+GET https://localhost:3000/media/vehicles/4f26536a-25c4-11f0-9d8a-dee3d78c366c/2
