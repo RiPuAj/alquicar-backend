@@ -1,5 +1,8 @@
 import { validateUser, validatePartialUser } from '../schemas/user.js';
 import { DatabaseError } from '../errors/database-error.js';
+import { catchAndResponseError } from '../errors/handler-error.js';
+import { getTokenInfo } from '../utils/tokens.js';
+import cookieParser from 'cookie-parser';
 
 
 export class UserController {
@@ -9,16 +12,20 @@ export class UserController {
     }
 
     getData = async(req, res)=>{
+        const token = req.cookies.access_token;
+        
+        if (!token) {
+            return res.status(400).json({ message: 'Token no proporcionado' });
+        }
+
+        const tokenInfo = getTokenInfo(token);
+
         try {
-            const token = req.params.token;
-            if (!token) {
-                return res.status(400).json({ message: 'Token no proporcionado' });
-              }
-            const data = await this.userModel.getData({token});
-            console.log(data)
-            return res.json(data);
+            const userData = await this.userModel.getById({ id: tokenInfo.id });
+            console.log(userData)
+            return res.json(userData);
         } catch (error) {
-            
+            catchAndResponseError(error, res);
         }
     }
 
