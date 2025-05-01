@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { getTokenInfo } from '../utils/tokens.js';
 import { disconnectSocket } from '../utils/sockets.js';
 
@@ -7,8 +6,9 @@ export const authMiddleware = (req, res, next) => {
   if (!token) return res.status(401).json({ message: 'Falta token' });
 
   try {
-    const verified = getTokenInfo(token);
-    req.user = verified;
+    const tokenInfo = getTokenInfo(token);
+    req.user_info = tokenInfo;
+
     next();
   } catch (e) {
     res.status(400).json({ message: 'Token inválido' });

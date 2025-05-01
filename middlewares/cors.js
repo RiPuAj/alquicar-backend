@@ -3,16 +3,16 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });
 
-const ACCEPTED_ORIGINS = ['http://localhost:3000', 'http://localhost:8081']
+const ACCEPTED_ORIGINS = ['http://localhost:3001', 'http://localhost:8081']
 
 export const corsMiddlewares = ({acceptedOrigins = ACCEPTED_ORIGINS} = {}) => cors({
     origin: (origin, callback) => {
 
-        if (acceptedOrigins.includes(origin)){
+        if(!origin){
             return callback(null, true)
         }
 
-        if(!origin){
+        if (acceptedOrigins.includes(origin)){
             return callback(null, true)
         }
 
