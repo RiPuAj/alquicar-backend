@@ -121,11 +121,11 @@ VALUES (UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'),'John Doe', 'john.do
 
 -- Insertar vehiculos
 
-INSERT INTO vehicles (owner_id, brand, model, year, type, transmission, fuel_type, capacity, num_doors, daily_price, availability) 
+INSERT INTO vehicles (owner_id, brand, model, latitude, longitude, year, type, transmission, fuel_type, capacity, num_doors, daily_price, availability) 
 VALUES 
-(UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), 'Hyundai', 'Tucson', 2022, 'Sedan', 'Automatic', 'Gasoline', 5, 3, 45.00, TRUE),
-(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), 'Citroën', 'Saxo', 2006, 'Sports', 'Manual', 'Gasoline', 2, 4, 80.00, TRUE),
-(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), 'Nissan', 'Qashqai', 2023, 'SUV', 'Automatic', 'Diesel', 7, 5,120.00, TRUE);
+(UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), 'Hyundai', 'Tucson', 48.8566, 2.3522 , 2022, 'Sedan', 'Automatic', 'Gasoline', 5, 3, 45.00, TRUE),
+(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), 'Citroën', 'Saxo', 19.4326, 99.1332, 2006, 'Sports', 'Manual', 'Gasoline', 2, 4, 80.00, TRUE),
+(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), 'Nissan', 'Qashqai',33.8688, 151.2093, 2023, 'SUV', 'Automatic', 'Diesel', 7, 5,120.00, TRUE);
 
 -- INSERTAR RESERVAS
 INSERT INTO reservations (vehicle_id, customer_id, start_date, end_date, total_price, status) 
