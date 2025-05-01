@@ -166,6 +166,14 @@ export class AuthController {
     }
   }
 
+  logout = async (req, res) => {
+    try {
+      res.clearCookie('access_token').status(200).json({ message: 'Sesión cerrada' });
+    } catch (error) {
+      catchAndResponseError(error, res);
+    }
+  }
+
   verifyAccount = async (req, res) =>{
     const token = req.query.token;
     if (!token) return res.status(400).json({ error: 'Token no proporcionado' });
