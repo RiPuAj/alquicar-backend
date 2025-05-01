@@ -112,28 +112,30 @@ CREATE TABLE payments (
 
 -- Insertar usuarios
 
-INSERT INTO users (id, name, email, password, address, phone, role, dni) 
-VALUES (UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'),'John Doe', 'john.doe@example.com','1234', '123 Main St, Cityville', '123456790', 'user', '12345678B'),
-(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'),'Alice Smith', 'alice.smith@example.com','4567', '456 Oak Ave, Townsville', '098765321', 'admin', '23456789A'),
-(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'),'Bob Johnson', 'bob.johnson@example.com','124421', '789 Pine Rd, Villagetown', '112334455', 'user', '34567890J');
+INSERT INTO users (id, name, email, password, address, phone, role, dni, isVerified) 
+VALUES (UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'),'John Doe', 'john.doe@example.com','1234', '123 Main St, Cityville', '123456790', 'user', '12345678B', false),
+(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'),'Alice Smith', 'alice.smith@example.com','4567', '456 Oak Ave, Townsville', '098765321', 'admin', '23456789A', false),
+(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'),'Bob Johnson', 'bob.johnson@example.com','124421', '789 Pine Rd, Villagetown', '112334455', 'user', '34567890J', true),
+(UUID_TO_BIN('db1f2c6d-6515-4438-a786-0dd10c42c147'),'Admin', 'admin','$2a$10$wF9MV6wMPI8P2S5nrBckg.Uzrmhmc2Ti8kaV9JujWycJprpaFQuLm', 'admin', '111111111', 'admin', '11111111A',true),
+(UUID_TO_BIN('ba171572-feaa-4400-ac53-78fde6871246'),'User', 'user','$2a$10$9efbESP30mzVdE5XicpSOe7UblylAHEwpzoVTMpH6WOS9dfn20oka', 'user', '222222222', 'user', '22222222B', true);
 
 -- Insertar vehiculos
 
-INSERT INTO vehicles (owner_id, brand, model, latitude, longitude, year, type, transmission, fuel_type, capacity, num_doors, daily_price, availability) 
+INSERT INTO vehicles (owner_id, brand, model, year, type, transmission, fuel_type, capacity, num_doors, daily_price, availability) 
 VALUES 
-(UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), 'Hyundai', 'Tucson', 12.3856, -45.9273, 2022, 'Sedan', 'Automatic', 'Gasoline', 5, 3, 45.00, TRUE),
-(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), 'Citroën', 'Saxo', -33.7421, 151.1194, 2006, 'Sports', 'Manual', 'Gasoline', 2, 4, 80.00, TRUE),
-(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), 'Nissan', 'Qashqai', 48.2163, 16.4027, 2023, 'SUV', 'Automatic', 'Diesel', 7, 5,120.00, TRUE);
+(UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), 'Hyundai', 'Tucson', 2022, 'Sedan', 'Automatic', 'Gasoline', 5, 3, 45.00, TRUE),
+(UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), 'Citroën', 'Saxo', 2006, 'Sports', 'Manual', 'Gasoline', 2, 4, 80.00, TRUE),
+(UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), 'Nissan', 'Qashqai', 2023, 'SUV', 'Automatic', 'Diesel', 7, 5,120.00, TRUE);
 
 -- INSERTAR RESERVAS
 INSERT INTO reservations (vehicle_id, customer_id, start_date, end_date, total_price, status) 
 VALUES 
-(1, UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), '2023-04-01 10:00:00', '2023-04-07 10:00:00', 315.00, 'Confirmed'),
-(2, UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), '2023-05-10 09:00:00', '2023-05-12 09:00:00', 240.00, 'Pending'),
-(2, UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), '2023-05-10 09:00:00', '2023-05-12 09:00:00', 240.00, 'Pending'),
-(3, UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), '2023-06-15 14:00:00', '2023-06-20 14:00:00', 600.00, 'Cancelled');
-
-
+(2, UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'), '2023-04-01 10:00:00', '2023-04-07 10:00:00', 315.00, 'Confirmed'),
+(3, UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), '2023-05-10 09:00:00', '2023-05-12 09:00:00', 240.00, 'Pending'),
+(3, UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'), '2023-05-10 09:00:00', '2023-05-12 09:00:00', 240.00, 'Pending'),
+(1, UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'), '2023-06-15 14:00:00', '2023-06-20 14:00:00', 600.00, 'Cancelled'),
+(1, UUID_TO_BIN('db1f2c6d-6515-4438-a786-0dd10c42c147'), '2023-04-01 10:00:00', '2023-04-07 10:00:00', 315.00, 'Confirmed'),
+(3, UUID_TO_BIN('db1f2c6d-6515-4438-a786-0dd10c42c147'), '2023-08-01 10:00:00', '2023-08-07 10:00:00', 315.00, 'Confirmed');
 
 
 -- Observamos que se han insertado bien

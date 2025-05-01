@@ -122,12 +122,6 @@ export class AuthController {
 
   login = async (req, res) => {
 
-    const validationUser = validatePartialUser(req.body);
-
-    if (!validationUser.success) {
-      return res.status(400).json({ error: JSON.parse(validationUser.error.message) });
-    }
-
     try {
       const user = await this.userModel.getByEmailWithPass({ email: req.body.email });
 
