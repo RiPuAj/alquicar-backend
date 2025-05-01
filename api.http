@@ -62,7 +62,7 @@ GET http://localhost:3000/reservations
 GET http://localhost:3000/reservations/2
 
 ###
-GET http://localhost:3000/reservations/3
+GET http://localhost:3000/reservations/4
 
 ### 
 POST http://localhost:3000/reservations
@@ -73,6 +73,18 @@ Content-Type: application/json
   "customer_id":"234e4567-e89b-12d3-a456-426614174111",
   "start_date":"2023-05-15T09:00:00Z",
   "end_date":"2023-05-18T09:00:00Z",
+  "total_price":50.00
+}
+
+### 
+POST http://localhost:3000/reservations
+Content-Type: application/json
+
+{
+  "vehicle_id":3,
+  "customer_id":"331dfc56-23e6-11f0-958d-345a603ee7bd",
+  "start_date":"2023-06-15T09:00:00Z",
+  "end_date":"2023-06-18T09:00:00Z",
   "total_price":50.00
 }
 

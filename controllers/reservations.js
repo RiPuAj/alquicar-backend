@@ -4,7 +4,7 @@
 *  Debe controlar los errores y devolver el status code correspondiente
 *  Debe llamar a los métodos del modelo correspondientes
 */
-
+import { getTokenInfo } from "../utils/tokens.js";
 import { catchAndResponseError } from "../errors/handler-error.js";
 
 
@@ -88,6 +88,25 @@ export class ReservationController {
         const { id } = req.params;
         try {
             const reservationModel = await this.reservationModel.getReservationsByCustomer({ idCustomer: id });
+            return res.json(reservationModel);
+        } catch (error) {
+            return catchAndResponseError(error, res);
+        }
+    }
+
+
+    getMyReservations = async (req, res) => {
+        const token = req.cookies.access_token;
+
+
+        if (!token) {
+            return res.status(400).json({ message: 'Token no proporcionado' });
+        }
+
+        const tokenInfo = getTokenInfo(token);
+        try {
+            const reservationModel = await this.reservationModel.getReservationsByCustomer({ idCustomer: tokenInfo.id });
+
             return res.json(reservationModel);
         } catch (error) {
             return catchAndResponseError(error, res);

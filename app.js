@@ -50,6 +50,7 @@ app.use((req, res) => {
 
 
 const server = http.createServer(app);
+
 const io = WebSocketServerCreator.createConnection({ server });
 io.use(corsMiddlewares());
 io.use(authMiddlewareSocket);

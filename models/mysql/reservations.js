@@ -173,7 +173,7 @@ async function existCustomer({ idCustomer }) {
 async function freeVehicleByDates({ idVehicle, startDate, endDate }) {
 
     const [result] = await conn.query(
-        'SELECT EXISTS(SELECT 1 FROM reservations WHERE vehicle_id = ? AND ((start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?))) AS vehicle_busy',
+        'SELECT EXISTS(SELECT 1 FROM reservations WHERE vehicle_id = ? AND LOWER(status) != "cancelled" AND ((start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?))) AS vehicle_busy',
         [idVehicle, startDate, endDate, startDate, endDate]);
 
     return result[0].vehicle_busy === 1 ? false : true;

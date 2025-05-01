@@ -7,12 +7,15 @@ export const createReservationRouter = ({ reservationModel }) => {
     const reservationController = new ReservationController({ reservationModel });
 
     reservationRouter.get("/", reservationController.getAll);
+    reservationRouter.get("/customer", reservationController.getMyReservations);
+    reservationRouter.get("/vehicle/:id", reservationController.getByVehicleId);
     reservationRouter.get("/:id", reservationController.getById);
     reservationRouter.post("/", reservationController.create);
     reservationRouter.patch("/:id", reservationController.update);
     reservationRouter.delete("/:id", reservationController.delete);
-    reservationRouter.get("/vehicle/:id", reservationController.getByVehicleId);
-    reservationRouter.get("/customer/:id", reservationController.getByCustomerId);
+    
+    //reservationRouter.get("/customer/:id", reservationController.getByCustomerId);
+    
 
     return reservationRouter;
 }
