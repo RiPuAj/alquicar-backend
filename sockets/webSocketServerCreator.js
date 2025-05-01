@@ -9,7 +9,13 @@ export class WebSocketServerCreator {
     static createConnection({server}) {
         console.log(this.webSocketServer)
         if (!this.webSocketServer) {
-            this.webSocketServer = new Server(server);
+            this.webSocketServer = new Server(server,{
+                cors: {
+                    origin: 'http://localhost:3001',
+                    methods: ["GET", "POST"],
+                    credentials: true,
+                },
+            });
         }
         return this.webSocketServer;
     }

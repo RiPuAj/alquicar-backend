@@ -16,14 +16,16 @@ import {
   createReservationRouter,
   createVehicleRouter,
   createAuthRouter,
-  createIncidenceRouter
+  createIncidenceRouter,
+  createChatRouter
 } from './routes/index.js';
 
 import {
   UserModel,
   ReservationModel,
   VehicleModel,
-  IncidenceModel
+  IncidenceModel,
+  ChatModel
 } from './models/mysql/index.js';
 import { corsMiddlewares } from './middlewares/cors.js';
 
@@ -42,6 +44,7 @@ app.use('/vehicles', createVehicleRouter({ vehicleModel: VehicleModel }));
 app.use('/auth', createAuthRouter({ userModel: UserModel }));
 app.use('/media', createMediaRouter({ mediaModel: MediaModel}));
 app.use('/incidences', createIncidenceRouter({ incidenceModel: IncidenceModel }))
+app.use('/chats', createChatRouter({ chatModel: ChatModel }));
 
 app.use((req, res) => {
   res.status(404).send('<h1>404 Not Found</h1>');
@@ -52,7 +55,6 @@ app.use((req, res) => {
 const server = http.createServer(app);
 
 const io = WebSocketServerCreator.createConnection({ server });
-io.use(corsMiddlewares());
 io.use(authMiddlewareSocket);
 createSocketEvents({ io, socketModel: SocketsModel });
 createMessagesEvents({ io, messagesModel: MessagesModel });

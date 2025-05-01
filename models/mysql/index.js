@@ -3,3 +3,6 @@ export { ReservationModel } from './reservations.js';
 export { VehicleModel } from './vehicle.js';
 export { IncidenceModel } from './incidences.js';
 export { MessagesModel } from './messages.js';
+export { SocketsModel } from './sockets.js';
+export { MediaModel } from './media.js';
+export { ChatModel } from './chat.js';
