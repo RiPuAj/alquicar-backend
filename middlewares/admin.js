@@ -21,10 +21,11 @@ export const adminMiddleware = (req, res, next) => {
 
 export const adminOrSelfMiddleware = (req, res, next) => {
     const token = req.cookies.access_token;
-
+    console.log('req.params:', req.params);
+    console.log('req.body:', req.body);
+    console.log('req.query:', req.query);   
     try {
         const tokenInfo = getTokenInfo(token);
-
         
         if (tokenInfo.role === 'admin') {
             req.user = tokenInfo; 
@@ -41,4 +42,5 @@ export const adminOrSelfMiddleware = (req, res, next) => {
         res.status(400).json({ message: 'Token inválido' });
     }
 };
+
 

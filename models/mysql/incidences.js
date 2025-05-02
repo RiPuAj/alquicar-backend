@@ -21,13 +21,19 @@ export class IncidenceModel {
         }
     }
 
-    static async getById({ id }) {
+    static async getById({ id, requester }) {
 
         try {
-
             const [incidence, tableInfo] = await conn.query(
                 'SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences WHERE id = ?', [id]);
-            return incidence;
+            if(incidence[0].from_id === requester.id || incidence[0].to_id === requester.id || requester.role === 'admin'){
+                return incidence;
+            }else{
+                return {
+                    success: false,
+                    message: 'Permiso denegado, debes ser administrador o parte de la incidencia'
+                };
+            }
 
         } catch (e) {
             // TODO Manejar error
@@ -38,7 +44,7 @@ export class IncidenceModel {
 
     }
 
-    static async create({ input }) {
+    static async create({ input, issuer }) {
 
         const {
             from_id,
@@ -50,7 +56,15 @@ export class IncidenceModel {
             created_at
         } = input;
 
+        const query = `SELECT from_id, to_id incidences (${fields.join(", ")}) VALUES (${values.join(", ")})`;
+        const [newIncidence] = await conn.query(query, params);
 
+        if(issuer !== from_id && issuer !== to_id){
+            return {
+                success: false,
+                message: 'Permiso denegado, debes ser el emisor o receptor de la incidencia'
+            };
+        }
 
         const optionalFields = ["to_id", "reservation_id", "created_at"];
         const fields = [
