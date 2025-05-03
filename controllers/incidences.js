@@ -69,9 +69,10 @@ export class IncidenceController {
 
     delete = async (req, res) => {
         const { id } = req.params;
-        const deletedIncidence = await this.incidenceModel.delete({ id });
-        if (deletedIncidence[0].affectedRows === 0) {
-            return res.status(404).json({ error: 'Incidence not found' });
+        const requester = getTokenInfo(req.cookies.access_token);
+        const deletedResult = await this.incidenceModel.delete({ id, requester });
+        if (!deletedResult.success) {
+            return res.status(403).json({ error: deletedResult.message });
         }
         res.status(201).json({ message: 'Incidence deleted' });
     }

@@ -26,6 +26,14 @@ export class IncidenceModel {
         try {
             const [incidence, tableInfo] = await conn.query(
                 'SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences WHERE id = ?', [id]);
+
+            if (incidence.length === 0) {
+                return {
+                    success: false,
+                    message: 'Incidence not found'
+                };
+            }
+
             if(incidence[0].from_id === requester.id || incidence[0].to_id === requester.id || requester.role === 'admin'){
                 return incidence;
             }else{
@@ -181,15 +189,46 @@ export class IncidenceModel {
         }
 
 
-    static async delete({id}) {
-        try {
+    static async delete({id, requester}) {
+        const incidence = await IncidenceModel.getById({ id, requester });
 
-            const res = await conn.query('DELETE FROM incidences WHERE id = ?', [id]);
-            return res;
-            
+        if (!incidence || incidence.success === false) {
+            return {
+                success: false,
+                message: incidence?.message
+            };
+        }
+
+        const fromId = incidence[0].from_id;
+        if (requester.id !== fromId && requester.role !== 'admin') {
+            return {
+                success: false,
+                message: 'Permiso denegado, solo el creador o un administrador pueden eliminar la incidencia'
+            };
+        }
+
+
+        try {
+            const [result] = await conn.query('DELETE FROM incidences WHERE id = ?', [id]);
+
+            if (result.affectedRows === 0) {
+                return {
+                    success: false,
+                    message: 'No se encontró la incidencia para eliminar'
+                };
+            }
+
+            return {
+                success: true,
+                message: 'Incidencia eliminada correctamente'
+            };
+
         } catch (e) {
-            
-            handlerDatabaseError({ err: { message: 'Error deleting incidence' } });
+            console.log(e);
+            return {
+                success: false,
+                message: 'Error al eliminar la incidencia'
+            };
         }
 
 
