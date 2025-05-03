@@ -62,10 +62,11 @@ export class IncidenceModel {
         
         
         const { id: issuerId } = issuer;
-        console.log('Creando incidencia:', { issuerId });
-        const validation = await IncidenceModel.validateIssuer({ reservation_id, issuerId });
-        if (!validation.success && issuer.role !== 'admin') {
-            return validation;
+        if(reservation_id){
+            const validation = await IncidenceModel.validateIssuer({ reservation_id, issuerId });
+            if (!validation.success && issuer.role !== 'admin') {
+                return validation;
+            }
         }
 
         if(issuerId !== from_id && issuerId !== to_id && issuer.role !== 'admin'){
