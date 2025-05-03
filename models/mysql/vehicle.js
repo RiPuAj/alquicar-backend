@@ -106,7 +106,9 @@ export class VehicleModel {
             //TODO: manejar error
             return {
                 success: false,
-                message: 'Vehicle was not created'
+                message: 'Vehicle was not created',
+		    vehicle: id
+
             };
         }
 
