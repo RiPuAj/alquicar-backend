@@ -124,7 +124,20 @@ export class IncidenceModel {
     }
 
 
-    static async update({id, input}){     
+    static async update({id, input, issuer}){
+
+        const { id: issuerId } = issuer;
+        const incidence = await IncidenceModel.getById({ id, requester: issuer });
+
+        if (!incidence || incidence.success === false) {
+            return {
+                success: false,
+                message: 'Permiso denegado, debes ser administrador o parte de la incidencia'
+            };
+        }
+
+    const { reservation_id } = incidence[0]
+        
 
         const fields = Object.keys(input).map(field => {
             if (field === "from_id" || field === "to_id") {
@@ -162,7 +175,7 @@ export class IncidenceModel {
                 //handlerDatabaseError({err: {message: 'Error updating incidence'}});
         }
             
-        const incidenceUpdated = await IncidenceModel.getById({id});
+        const incidenceUpdated = await IncidenceModel.getById({id, requester: issuer});
         
         return { success: true, message: 'Incidence updated', incidence: incidenceUpdated };
         }

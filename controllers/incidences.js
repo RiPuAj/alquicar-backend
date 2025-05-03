@@ -55,11 +55,12 @@ export class IncidenceController {
 
     update = async (req, res) => {
         const { id } = req.params;
+        const issuer = getTokenInfo(req.cookies.access_token);
         const incidence = validatePartialIncidence(req.body);
         if (!incidence.success) {
             return res.status(400).json({ error: JSON.parse(incidence.error.message) });
         }
-        const updatedIncidence = await this.incidenceModel.update({ id, input: incidence.data });
+        const updatedIncidence = await this.incidenceModel.update({ id, input: incidence.data,  issuer});
         if (!updatedIncidence.success) {
             return res.status(400).json({ error: updatedIncidence.message });
         }
