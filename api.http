@@ -140,8 +140,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "pepito@gmail.com",
-  "password": "12345678"
+  "email": "admin",
+  "password": "admin"
 }
 
 ###
@@ -162,9 +162,15 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "nicolasreyalonso@gmail.com",
-  "password": "Nicololo"
+  "email": "nicolasmb1603@gmail.com",
+  "password": "12345678"
 }
+
+###
+GET http://localhost:3000/incidences/
+
+###
+GET http://localhost:3000/incidences/my-incidences
 
 ###
 POST http://localhost:3000/auth/register

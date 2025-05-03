@@ -21,6 +21,24 @@ export class IncidenceModel {
         }
     }
 
+    static async getMyIncidences({ requester }) {
+        try {
+            const [incidences, tableInfo] = await conn.query(
+                'SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences WHERE from_id = UUID_TO_BIN(?) OR to_id = UUID_TO_BIN(?)', [requester.id, requester.id]);
+
+            return incidences;
+
+        } catch (e) {
+            // TODO Manejar error
+            console.log(e);
+            return {
+                success: false,
+                message: 'Error getting my incidences'
+            };
+        }
+
+    }
+
     static async getById({ id, requester }) {
 
         try {

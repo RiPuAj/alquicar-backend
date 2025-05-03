@@ -10,6 +10,7 @@ export const createIncidenceRouter = ({incidenceModel}) => {
     const incidenceController = new IncidenceController({incidenceModel});
 
     incidenceRouter.get("/", [authMiddleware, adminMiddleware], incidenceController.getAll);
+    incidenceRouter.get("/my-incidences", incidenceController.getMyIncidences);
     incidenceRouter.get("/:id", incidenceController.getById);
     incidenceRouter.post("/", incidenceController.create);
     incidenceRouter.patch("/:id", incidenceController.update);

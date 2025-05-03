@@ -20,6 +20,20 @@ export class IncidenceController {
         }
     }
 
+    getMyIncidences = async (req, res) => {
+        try {
+            const requester = getTokenInfo(req.cookies.access_token);
+            const myIncidences = await this.incidenceModel.getMyIncidences({ requester });
+            if (myIncidences.length === 0) {
+                return res.status(404).json({ error: 'User has no incidences' });
+            }
+            return res.json(myIncidences);
+        } catch (e) {
+            return res.status(500).json({ error: e.message });
+            
+        }
+    }
+
     getById = async (req, res) => {
         const { id } = req.params;
         const requester = getTokenInfo(req.cookies.access_token);
