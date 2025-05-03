@@ -23,7 +23,6 @@ export class IncidenceController {
     getById = async (req, res) => {
         const { id } = req.params;
         const requester = getTokenInfo(req.cookies.access_token);
-        console.log('requester:', requester);
         try {
             const incidence = await this.incidenceModel.getById({ id, requester });
             if (incidence.length === 0) {
@@ -45,7 +44,7 @@ export class IncidenceController {
         if (!incidence.success) {
             return res.status(400).json({ error: JSON.parse(incidence.error.message) });
         }
-        const {id: issuer} = getTokenInfo(req.cookies.access_token);
+        const issuer = getTokenInfo(req.cookies.access_token);
         const newIncidence = await this.incidenceModel.create({ input: incidence.data, issuer });
         if (!newIncidence.success) {
             return res.status(400).json({ error: newIncidence.message });
