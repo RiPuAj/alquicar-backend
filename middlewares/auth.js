@@ -26,10 +26,14 @@ export const authMiddlewareSocket = (socket, next) => {
   const token = cookies.split('; ').find(row => row.startsWith('access_token=')).split('=')[1];
 
   if (!token) return disconnectSocket(socket, 'Falta token');
+
+  socket.user_info = getTokenInfo(token);
+
   } catch (e) {
     
     return disconnectSocket(socket, 'Falta token');
   }
+
 
   next();
 }

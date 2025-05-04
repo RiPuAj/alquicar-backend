@@ -1,6 +1,7 @@
 import { CreateMYSQLConnection } from "./connectionCreater.js";
+import{ DatabaseError } from "../../errors/database-error.js";
 
-const conn = CreateMYSQLConnection.getConncetion();
+const conn = await CreateMYSQLConnection.getConncetion();
 
 export class SocketsModel{
     static async getAll(){
@@ -16,10 +17,11 @@ export class SocketsModel{
 
     static async getById({id}){
         try{
-            const [sockets, tableInfo] = await conn.query('SELECT socket_id FROM sockets WHERE user_id = ?', [id]);
+            const [sockets, tableInfo] = await conn.query('SELECT socket_id FROM sockets WHERE user_id = UUID_TO_BIN(?)', [id]);
             return sockets[0];
         }catch(e){
             // TODO Manejar error
+            console.log(e);
             throw new DatabaseError('Error getting socket by id');
         }
     }
@@ -30,13 +32,14 @@ export class SocketsModel{
             return sockets[0];
         }catch(e){
             // TODO Manejar error
+            console.log(e);
             throw new DatabaseError('Error creating socket');
         }
     }
 
-    static async update({id, input}){
+    static async update({id, socket_id}){
         try{
-            const [sockets, tableInfo] = await conn.query('UPDATE sockets SET socket_id = ?, last_connection = NOW() WHERE user_id = UUID_TO_BIN(?)', [input.socket_id, id]);
+            const [sockets, tableInfo] = await conn.query('UPDATE sockets SET socket_id = ?, last_connection = NOW() WHERE user_id = UUID_TO_BIN(?)', [socket_id, id]);
             return sockets[0];
         }catch(e){
             // TODO Manejar error
