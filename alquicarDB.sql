@@ -9,9 +9,8 @@ DROP TABLE IF EXISTS reservations;
 DROP TABLE IF EXISTS vehicles;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS sockets;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF exists vehicles_models;
-DROP TABLE IF exists vehicles_brands;
 
 
 
@@ -25,7 +24,7 @@ CREATE TABLE users(
     role ENUM('admin', 'user') NOT NULL DEFAULT 'user',
     created_at TIMESTAMP DEFAULT NOW(),
     dni VARCHAR(9) NOT NULL UNIQUE,
-    isVerified BOOLEAN DEFAULT FALSE,
+    isVerified BOOLEAN DEFAULT FALSE
     );
 
 
@@ -49,16 +48,6 @@ CREATE TABLE vehicles (
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-  CREATE TABLE sessions (
-    sessionid VARCHAR(512) NOT NULL,              -- jwebtoken, suele ser una cadena larga
-    user_id BINARY(16) NOT NULL,                     -- id del usuario, referencia a otra tabla
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  -- fecha de creación automática
-    expires_at DATETIME NOT NULL,             -- fecha de caducidad
-
-    PRIMARY KEY (sessionid),                      -- asumiendo que el token es único
-    FOREIGN KEY (user_id) REFERENCES users(id) -- referencia a la tabla de usuarios
-);
-    CREATE INDEX idx_sessions_sessionid ON sessions (sessionid);
     
 CREATE TABLE reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -109,6 +98,13 @@ CREATE TABLE payments (
     FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE
 );
 
+create table sockets (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id BINARY(16) NOT NULL,
+    socket_id VARCHAR(255) NOT NULL,
+    last_connection TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 -- Insertar usuarios
 
@@ -137,6 +133,37 @@ VALUES
 (1, UUID_TO_BIN('db1f2c6d-6515-4438-a786-0dd10c42c147'), '2023-04-01 10:00:00', '2023-04-07 10:00:00', 315.00, 'Confirmed'),
 (3, UUID_TO_BIN('db1f2c6d-6515-4438-a786-0dd10c42c147'), '2023-08-01 10:00:00', '2023-08-07 10:00:00', 315.00, 'Confirmed');
 
+INSERT INTO incidences (from_id, to_id, reservation_id, description, type, status)
+VALUES (
+    UUID_TO_BIN('ba171572-feaa-4400-ac53-78fde6871246'),  
+    UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'),  
+    1, 
+    'Falta copia del permiso de conducir para completar la reserva.', 
+    'PLATFORM', 
+    'Pending'
+);
+
+-- 2) Incidencia abierta por Bob hacia Alice por olor a humo en la reserva 4
+INSERT INTO incidences (from_id, to_id, reservation_id, description, type, status)
+VALUES (
+    UUID_TO_BIN('345e4567-e89b-12d3-a456-426614174222'),  -- Bob Johnson (usuario)
+    UUID_TO_BIN('234e4567-e89b-12d3-a456-426614174111'),  -- Alice Smith (admin)
+    2, 
+    'El vehículo tenía un fuerte olor a humo al iniciar la reserva.', 
+    'USER', 
+    'In Review'
+);
+
+-- 3) Incidencia abierta por John (sin destinatario específico) por retraso en la entrega de la reserva 2
+INSERT INTO incidences (from_id, to_id, reservation_id, description, type, status)
+VALUES (
+    UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174000'),  -- John Doe (usuario)
+    NULL, 
+    2, 
+    'El vehículo no estaba listo a la hora acordada para la recogida.', 
+    'USER', 
+    'Resolved'
+);
 
 -- Observamos que se han insertado bien
 SELECT * FROM vehicles_brands;
