@@ -57,7 +57,7 @@ const server = http.createServer(app);
 const io = WebSocketServerCreator.createConnection({ server });
 io.use(authMiddlewareSocket);
 createSocketEvents({ io, socketModel: SocketsModel });
-createMessagesEvents({ io, messagesModel: MessagesModel });
+createMessagesEvents({ io, chatModel: ChatModel, socketModel: SocketsModel });
 
 server.listen(process.env.PORT, () => {
   console.log(`Servidor HTTPS activo en http://localhost:${process.env.PORT}`);

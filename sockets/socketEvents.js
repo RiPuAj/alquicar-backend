@@ -9,8 +9,7 @@ export const createSocketEvents = ({ io, socketModel }) => {
     io.on("connection", (socket) => {
         console.log('Nuevo cliente conectado:', socket.id);
     
-        //socketController.create({user_id: user_id, socket: socket});
-
+        socketController.create({user_id: socket.user_info.id, socket_id: socket.id});
 
         socket.on("disconnect", () => {
             console.log("Client disconnected");
