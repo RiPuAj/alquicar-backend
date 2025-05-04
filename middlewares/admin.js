@@ -20,10 +20,7 @@ export const adminMiddleware = (req, res, next) => {
 
 
 export const adminOrSelfMiddleware = (req, res, next) => {
-    const token = req.cookies.access_token;
-    console.log('req.params:', req.params);
-    console.log('req.body:', req.body);
-    console.log('req.query:', req.query);   
+    const token = req.cookies.access_token; 
     try {
         const tokenInfo = getTokenInfo(token);
         
