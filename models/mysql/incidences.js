@@ -21,24 +21,60 @@ export class IncidenceModel {
         }
     }
 
-    static async getById({ id }) {
-
+    static async getMyIncidences({ requester }) {
         try {
+            const [incidences, tableInfo] = await conn.query(
+                'SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences WHERE from_id = UUID_TO_BIN(?) OR to_id = UUID_TO_BIN(?)', [requester.id, requester.id]);
 
-            const [incidence, tableInfo] = await conn.query(
-                'SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences WHERE id = ?', [id]);
-            return incidence;
+            return incidences;
 
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            throw new DatabaseError('Error getting incidence');
+            return {
+                success: false,
+                message: 'Error getting my incidences'
+            };
+        }
+
+    }
+
+    static async getById({ id, requester }) {
+
+        try {
+            const [incidence, tableInfo] = await conn.query(
+                'SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences WHERE id = ?', [id]);
+
+            if (incidence.length === 0) {
+                return {
+                    success: false,
+                    message: 'Incidence not found'
+                };
+            }
+
+            if(incidence[0].from_id === requester.id || incidence[0].to_id === requester.id || requester.role === 'admin'){
+                return incidence;
+            }else{
+                return {
+                    success: false,
+                    message: 'Permiso denegado, debes ser administrador o parte de la incidencia'
+                };
+            }
+
+        } catch (e) {
+            // TODO Manejar error
+            console.log(e);
+            //throw new DatabaseError('Error getting incidence');
+            return {
+                success: false,
+                message: 'Incidence not found'
+            };
         }
 
 
     }
 
-    static async create({ input }) {
+    static async create({ input, issuer }) {
 
         const {
             from_id,
@@ -49,8 +85,22 @@ export class IncidenceModel {
             status,
             created_at
         } = input;
+        
+        
+        const { id: issuerId } = issuer;
+        if(reservation_id){
+            const validation = await IncidenceModel.validateIssuer({ reservation_id, issuerId });
+            if (!validation.success && issuer.role !== 'admin') {
+                return validation;
+            }
+        }
 
-
+        if(issuerId !== from_id && issuerId !== to_id && issuer.role !== 'admin'){
+            return {
+                success: false,
+                message: 'Permission denied, you must be part of the reservation'
+            };
+        }
 
         const optionalFields = ["to_id", "reservation_id", "created_at"];
         const fields = [
@@ -84,7 +134,7 @@ export class IncidenceModel {
 
             const id = newIncidence.insertId;
             
-            const incidenceUpdated = await IncidenceModel.getById({id});
+            const incidenceUpdated = await IncidenceModel.getById({id, requester: issuer});
         
             return { success: true, message: 'Incidence updated', incidence: incidenceUpdated };
 
@@ -100,7 +150,20 @@ export class IncidenceModel {
     }
 
 
-    static async update({id, input}){     
+    static async update({id, input, issuer}){
+
+        const { id: issuerId } = issuer;
+        const incidence = await IncidenceModel.getById({ id, requester: issuer });
+
+        if (!incidence || incidence.success === false) {
+            return {
+                success: false,
+                message: 'Permiso denegado, debes ser administrador o parte de la incidencia'
+            };
+        }
+
+    const { reservation_id } = incidence[0]
+        
 
         const fields = Object.keys(input).map(field => {
             if (field === "from_id" || field === "to_id") {
@@ -138,24 +201,98 @@ export class IncidenceModel {
                 //handlerDatabaseError({err: {message: 'Error updating incidence'}});
         }
             
-        const incidenceUpdated = await IncidenceModel.getById({id});
+        const incidenceUpdated = await IncidenceModel.getById({id, requester: issuer});
         
         return { success: true, message: 'Incidence updated', incidence: incidenceUpdated };
         }
 
 
-    static async delete({id}) {
-        try {
+    static async delete({id, requester}) {
+        const incidence = await IncidenceModel.getById({ id, requester });
 
-            const res = await conn.query('DELETE FROM incidences WHERE id = ?', [id]);
-            return res;
-            
-        } catch (e) {
-            
-            handlerDatabaseError({ err: { message: 'Error deleting incidence' } });
+        if (!incidence || incidence.success === false) {
+            return {
+                success: false,
+                message: incidence?.message
+            };
+        }
+
+        const fromId = incidence[0].from_id;
+        if (requester.id !== fromId && requester.role !== 'admin') {
+            return {
+                success: false,
+                message: 'Permiso denegado, solo el creador o un administrador pueden eliminar la incidencia'
+            };
         }
 
 
+        try {
+            const [result] = await conn.query('DELETE FROM incidences WHERE id = ?', [id]);
+
+            if (result.affectedRows === 0) {
+                return {
+                    success: false,
+                    message: 'No se encontró la incidencia para eliminar'
+                };
+            }
+
+            return {
+                success: true,
+                message: 'Incidencia eliminada correctamente'
+            };
+
+        } catch (e) {
+            console.log(e);
+            return {
+                success: false,
+                message: 'Error al eliminar la incidencia'
+            };
+        }
+
+
+    }
+
+    static async validateIssuer({ reservation_id, issuerId }) {
+        
+        try {
+            const query = `
+                SELECT 
+                    BIN_TO_UUID(v.owner_id) AS owner_id,
+                    BIN_TO_UUID(r.customer_id) AS customer_id
+                FROM 
+                    reservations r
+                JOIN 
+                    vehicles v ON r.vehicle_id = v.id
+                WHERE 
+                    r.id = ?;
+            `;
+            const [result] = await conn.query(query, [reservation_id]);
+    
+            if (result.length === 0) {
+                return {
+                    success: false,
+                    message: 'Reservation not found'
+                };
+            }
+    
+            const { owner_id, customer_id } = result[0];
+    
+            // Verificar si el issuer es el dueño o el cliente
+            if (issuerId === owner_id || issuerId === customer_id) {
+                return { success: true };
+            } else {
+                return {
+                    success: false,
+                    message: 'Permission denied, you must be part of the reservation'
+                };
+            }
+        } catch (e) {
+            console.log(e);
+            return {
+                success: false,
+                message: 'Error validating issuer'
+            };
+        }
     }
 
 }
