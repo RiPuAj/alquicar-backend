@@ -1,5 +1,4 @@
 import { SocketsController } from "../controllers/socket.js";
-import { authMiddlewareSocket } from "../middlewares/auth.js";
 
 
 export const createSocketEvents = ({ io, socketModel }) => {
