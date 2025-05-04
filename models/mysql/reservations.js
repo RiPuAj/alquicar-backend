@@ -1,8 +1,9 @@
 import { validateReservation, validatePartialReservation } from '../../schemas/reservations.js';
-import {handlerDatabaseError } from '../../errors/handler-error.js';
+import { handlerDatabaseError } from '../../errors/handler-error.js';
 import { ValidationError } from '../../errors/validation-error.js';
 import { CreateMYSQLConnection } from './connectionCreater.js';
 import { DatabaseError } from '../../errors/database-error.js';
+import { changeDateFormat } from '../../utils/changeDateFormat.js';
 
 
 const conn = await CreateMYSQLConnection.getConncetion();
@@ -18,7 +19,7 @@ export class ReservationModel {
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            handlerDatabaseError({error: new DatabaseError('Error getting all users')});
+            handlerDatabaseError({ error: new DatabaseError('Error getting all users') });
         }
     }
 
@@ -33,7 +34,7 @@ export class ReservationModel {
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            handlerDatabaseError({error: new DatabaseError('Error getting user')});
+            handlerDatabaseError({ error: new DatabaseError('Error getting user') });
         }
     }
 
@@ -61,22 +62,22 @@ export class ReservationModel {
 
         try {
             // Verificar si el vehículo y el usuario que alquila existe
-            if(!(await existVehicle({ idVehicle: vehicle_id }))) handlerDatabaseError({error: new DatabaseError('Vehicle does not exist')});
-            if(!(await existCustomer({ idCustomer: customer_id }))) handlerDatabaseError({error: new DatabaseError('Customer does not exist')});
-            if(!(await freeVehicleByDates({ idVehicle: vehicle_id, startDate: start_date, endDate: end_date }))) handlerDatabaseError({error: new DatabaseError('Vehicle is busy')});
-         
+            if (!(await existVehicle({ idVehicle: vehicle_id }))) handlerDatabaseError({ error: new DatabaseError('Vehicle does not exist') });
+            if (!(await existCustomer({ idCustomer: customer_id }))) handlerDatabaseError({ error: new DatabaseError('Customer does not exist') });
+            if (!(await freeVehicleByDates({ idVehicle: vehicle_id, startDate: start_date, endDate: end_date }))) handlerDatabaseError({ error: new DatabaseError('Vehicle is busy') });
+
             const [result] = await conn.query(
                 'INSERT INTO reservations (vehicle_id, customer_id, start_date, end_date, total_price, status) VALUES (?, UUID_TO_BIN(?), ?, ?, ?, ?)',
                 [vehicle_id, customer_id, start_date, end_date, total_price, status]
             );
-           
+
             const newReservation = await this.getById({ id: result.insertId });
             return newReservation;
 
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            handlerDatabaseError({error: e});
+            handlerDatabaseError({ error: e });
         }
     }
 
@@ -89,10 +90,10 @@ export class ReservationModel {
         }
 
         // Campos que no se pueden modificar
-        if(input.id || input.vehicle_id || input.customer_id) handlerDatabaseError({error: new DatabaseError('Cannot update id, vehicle_id or customer_id')});
+        if (input.id || input.vehicle_id || input.customer_id) handlerDatabaseError({ error: new DatabaseError('Cannot update id, vehicle_id or customer_id') });
 
-        if(input.start_date) input.start_date = changeDateFormat(input.start_date);
-        if(input.end_date) input.end_date = changeDateFormat(input.end_date);
+        if (input.start_date) input.start_date = changeDateFormat(input.start_date);
+        if (input.end_date) input.end_date = changeDateFormat(input.end_date);
 
         const fields = Object.keys(input);
         const values = Object.values(input);
@@ -101,7 +102,7 @@ export class ReservationModel {
         try {
             const [result] = await conn.query(
                 `UPDATE reservations SET ${updates} WHERE id = ?`, [...values, id]);
-            if (result.affectedRows === 0) handlerDatabaseError({error: new DatabaseError('Reservation not found')});
+            if (result.affectedRows === 0) handlerDatabaseError({ error: new DatabaseError('Reservation not found') });
 
             const reservation = await this.getById({ id });
             return reservation;
@@ -116,8 +117,8 @@ export class ReservationModel {
 
         try {
             const [result] = await conn.query('DELETE FROM reservations WHERE id = ?', [id]);
-            
-            return {success: true, message: 'Reservation deleted', id: id};
+
+            return { success: true, message: 'Reservation deleted', id: id };
 
         } catch (e) {
             // TODO Manejar error
@@ -126,10 +127,10 @@ export class ReservationModel {
     }
 
     static async getReservationsByVehicle({ idVehicle }) {
-        
+
         try {
-            if(!(await existVehicle({ idVehicle }))) handlerDatabaseError({error: new DatabaseError('Vehicle does not exist')});
-            
+            if (!(await existVehicle({ idVehicle }))) handlerDatabaseError({ error: new DatabaseError('Vehicle does not exist') });
+
             const [reservations, tableInfo] = await conn.query(
                 'SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE vehicle_id = ?', [idVehicle]);
             return reservations;
@@ -141,9 +142,9 @@ export class ReservationModel {
     }
 
     static async getReservationsByCustomer({ idCustomer }) {
-        
+
         try {
-            if(!(await existCustomer({ idCustomer }))) handlerDatabaseError({error: new DatabaseError('Customer does not exist')});
+            if (!(await existCustomer({ idCustomer }))) handlerDatabaseError({ error: new DatabaseError('Customer does not exist') });
 
             const [reservations, tableInfo] = await conn.query(
                 'SELECT id, vehicle_id, BIN_TO_UUID(customer_id) customer_id, start_date, end_date, total_price, status, created_at FROM reservations WHERE customer_id = UUID_TO_BIN(?)', [idCustomer]);
@@ -180,7 +181,3 @@ async function freeVehicleByDates({ idVehicle, startDate, endDate }) {
 
 }
 
-function changeDateFormat(date) {
-    const formattedDate = date.replace("T", " ").replace("Z", "");
-    return formattedDate; 
-}

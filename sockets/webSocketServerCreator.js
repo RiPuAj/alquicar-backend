@@ -11,7 +11,7 @@ export class WebSocketServerCreator {
         if (!this.webSocketServer) {
             this.webSocketServer = new Server(server,{
                 cors: {
-                    origin: 'http://localhost:3001',
+                    origin: 'http://localhost:8081',
                     methods: ["GET", "POST"],
                     credentials: true,
                 },

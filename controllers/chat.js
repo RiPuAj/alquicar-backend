@@ -4,14 +4,50 @@ export class ChatController {
         this.chatModel = chatModel;
     }
 
-    getAllMyChats = async (req, res) => {
+    getAllMyChats = async ({id }) => {
         try {
-            const chats = await this.chatModel.getAllMyChatsAsCustomer({id: req.user_info.id});
-            res.status(200).json(chats);
+            const chatsAsCustomer = await this.chatModel.getAllMyChatsAsCustomer({ id: id });
+            const chatsAsOwner = await this.chatModel.getAllMyChatsAsOwner({ id: id });
+            const chats = [...chatsAsCustomer, ...chatsAsOwner];
+            return chats;
         } catch (error) {
             //TODO Manejar error
             console.log(error);
-            res.status(500).json({ error: 'Error fetching chats' });
+            return { error: 'Error al obtener los chats' };
         }
     };
+
+    createMessage = async ({ newMessage }) => {
+        try {
+            const response = await this.chatModel.createMessage({newMessage});
+            return response;
+
+        } catch (error) {
+            //TODO Manejar error
+            console.log(error);
+            return { error: 'Error al enviar el mensaje' };
+        }
+    };
+
+    getSocketIdByUserId = async ({ id }) => {
+        try {
+            const existSocket = await this.chatModel.getSocketIdByUserId({ id: id });
+            return existSocket.socket_id;
+        } catch (error) {
+            //TODO Manejar error
+            console.log(error);
+            return { error: 'Error al obtener el socket' };
+        }
+    };
+
+    getMessageById = async ({ id }) => {
+        try {
+            const message = await this.chatModel.getMessageById({ id: id });
+            return message;
+        } catch (error) {
+            //TODO Manejar error
+            console.log(error);
+            return { error: 'Error al obtener el mensaje' };
+        }
+    }
 }
