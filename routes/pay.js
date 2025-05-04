@@ -4,8 +4,9 @@ import Stripe from 'stripe';
 
 export const createPaymentRouter = () => {
   const payRouter = Router();
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Usá una variable de entorno para la clave
-
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  console.log('Stripe initialized with ', stripe);
+  console.log('Stripe initialized with secre');
   payRouter.post('/pay', async (req, res) => {
     const { product, quantity } = req.body;
 
@@ -14,13 +15,7 @@ export const createPaymentRouter = () => {
         payment_method_types: ['card'],
         line_items: [
           {
-            price_data: {
-              currency: 'eur',
-              product_data: {
-                name: product.name,
-              },
-              unit_amount: product.price * 100, // en centavos
-            },
+            price: '1',
             quantity: quantity,
           },
         ],
@@ -28,8 +23,9 @@ export const createPaymentRouter = () => {
         success_url: 'http://localhost:3000/success',
         cancel_url: 'http://localhost:3000/cancel',
       });
+      console.log('Session created:', session);
 
-      res.json({ id: session.id });
+      rres.redirect(303, session.url);
     } catch (err) {
       console.error('Error al crear la sesión de pago:', err);
       res.status(500).json({ error: 'Error al crear la sesión de pago' });
