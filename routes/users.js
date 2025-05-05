@@ -10,7 +10,7 @@ export const createUserRouter = ({userModel}) => {
 
     userRouter.get("/", [authMiddleware, adminMiddleware] , userController.getAll);
     userRouter.get("/getdata", userController.getData)
-    userRouter.get("/:id", [authMiddleware, adminOrSelfMiddleware], userController.getById);
+    userRouter.get("/:id", authMiddleware, userController.getById);
     userRouter.get("/email/:email", userController.getByEmail);
     userRouter.post("/", userController.create);
     userRouter.patch("/:id", [authMiddleware, adminOrSelfMiddleware], userController.update);

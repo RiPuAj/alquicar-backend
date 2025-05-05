@@ -133,7 +133,11 @@ GET http://localhost:3000/reservations/vehicle/2
 GET http://localhost:3000/reservations/customer/234e4567-e89b-12d3-a456-426614174111
 
 ###
-GET http://localhost:3000/vehicles
+GET http://localhost:3000/reservations/customer/
+
+
+###
+GET http://localhost:3000/users
 
 ###
 POST http://localhost:3000/auth/login
