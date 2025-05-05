@@ -132,7 +132,7 @@ export class AuthController {
 
       const passwordComparation = await bcrypt.compare(req.body.password, user.password);
 
-      if (!passwordComparation) res.status(401).json({ error: 'Contraseña incorrecta' });
+      if (!passwordComparation) return res.status(401).json({ error: 'Contraseña incorrecta' });
       
       if(!user.isVerified) {
         return res.status(401).json({ error: 'Usuario no verificado' });
