@@ -187,7 +187,7 @@ export class AuthController {
         const response = await this.userModel.update({ id, input: { isVerified: true } });
         const input = {id};
         await MediaModel.create({ input });
-        res.status(200).json({ message: 'Usuario verificado' });
+        return res.redirect('http://localhost:8081/login');
     } catch (error) {
       catchAndResponseError(error, res);
     }
