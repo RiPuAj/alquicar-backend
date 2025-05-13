@@ -10,7 +10,6 @@ import { SocketsModel } from './models/mysql/sockets.js';
 import { authMiddlewareSocket } from './middlewares/auth.js';
 import { createMessagesEvents } from './sockets/messagesEvents.js';
 import { MessagesModel } from './models/mysql/messages.js';
-import Stripe from 'stripe';
 
 import {
   createUserRouter,
@@ -30,10 +29,11 @@ import {
   ChatModel
 } from './models/mysql/index.js';
 import { corsMiddlewares } from './middlewares/cors.js';
+import { create } from 'domain';
 
 dotenv.config({ path: './.env' });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -47,30 +47,7 @@ app.use('/auth', createAuthRouter({ userModel: UserModel }));
 app.use('/media', createMediaRouter({ mediaModel: MediaModel}));
 app.use('/incidences', createIncidenceRouter({ incidenceModel: IncidenceModel }))
 app.use('/chats', createChatRouter({ chatModel: ChatModel }));
-app.use('/stripe', createPaymentRouter);
-
-app.post('/create-checkout-session', async (req, res) => {
-  const { price, product, quantity } = req.body;
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: product.name,
-          },
-          unit_amount: price,  // The price in the smallest currency unit (e.g., cents for EUR)
-        },
-        quantity: quantity,
-      },
-    ],
-    mode: 'payment',
-    success_url: `https://localhost:3000/success`,
-    cancel_url: `https://localhost:3000/unsuccess`,
-  });
-
-  res.json({ url: session.url });
-});
+app.use('/pay', createPaymentRouter());
 
 app.use((req, res) => {
   res.status(404).send('<h1>404 Not Found</h1>');
