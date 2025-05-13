@@ -17,7 +17,8 @@ import {
   createVehicleRouter,
   createAuthRouter,
   createIncidenceRouter,
-  createChatRouter
+  createChatRouter,
+  createPaymentRouter
 } from './routes/index.js';
 
 import {
@@ -28,6 +29,7 @@ import {
   ChatModel
 } from './models/mysql/index.js';
 import { corsMiddlewares } from './middlewares/cors.js';
+import { create } from 'domain';
 
 dotenv.config({ path: './.env' });
 
@@ -45,6 +47,7 @@ app.use('/auth', createAuthRouter({ userModel: UserModel }));
 app.use('/media', createMediaRouter({ mediaModel: MediaModel}));
 app.use('/incidences', createIncidenceRouter({ incidenceModel: IncidenceModel }))
 app.use('/chats', createChatRouter({ chatModel: ChatModel }));
+app.use('/pay', createPaymentRouter());
 
 app.use((req, res) => {
   res.status(404).send('<h1>404 Not Found</h1>');
