@@ -19,4 +19,19 @@ export class NotificationController {
         }
         
     }
+
+
+    create = async (req, res) => {
+        const notification = validateNotification(req.body);
+        if (!notification.success) {
+            return res.status(400).json({ error: JSON.parse(notification.error.message) });
+        }
+        const newNotification = await this.notificationModel.create({ input: notification.data });
+        if (!newNotification.success) {
+            return res.status(400).json({ error: newNotification.message });
+        }
+        return res.status(201).json(newNotification);
+
+    }
+
 }

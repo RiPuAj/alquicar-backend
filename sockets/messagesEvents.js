@@ -4,6 +4,7 @@ import { SocketsController } from "../controllers/socket.js";
 export const createMessagesEvents = ({ io, chatModel, socketModel }) => {
     const chatController = new ChatController({ chatModel: chatModel });
     const socketController = new SocketsController({ socketModel: socketModel });
+    const notificationController = new NotificationController({ notificationModel: notificationModel });
 
     io.on("connection", (socket) => {
 

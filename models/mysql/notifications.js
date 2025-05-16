@@ -22,4 +22,29 @@ export class NotificationModel {
 
 
     }
+
+    static async create({ input }) {
+
+        const {
+            user_id,
+            type
+        } = input;
+
+        try {
+            
+
+            const [result] = await conn.query(
+                'INSERT INTO notifications (user_id, type) VALUES (UUID_TO_BIN(?), ?)',
+                [user_id, type]
+            );
+
+            const newNotification = await this.getById({ id: result.insertId });
+            return newNotification;
+
+        } catch (e) {
+            
+            console.log(e);
+            handlerDatabaseError({ error: e });
+        }
+    }
 }

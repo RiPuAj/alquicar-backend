@@ -5,7 +5,7 @@ GET http://localhost:3000/users
 GET http://localhost:3000/vehicles/
 
 ###
-GET http://localhost:3000/vehicles/6
+GET http://localhost:3000/notifications/123e4567-e89b-12d3-a456-426614174000
 
 ###
 POST http://localhost:3000/vehicles/
