@@ -38,13 +38,12 @@ export class NotificationModel {
                 [user_id, type]
             );
 
-            const newNotification = await this.getById({ id: result.insertId });
-            return newNotification;
+    
+            return { success: true, message: 'Notification added' };
 
         } catch (e) {
-            
+
             console.log(e);
-            handlerDatabaseError({ error: e });
         }
     }
 }
