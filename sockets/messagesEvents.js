@@ -1,7 +1,8 @@
 import { ChatController } from "../controllers/chat.js";
 import { SocketsController } from "../controllers/socket.js";
+import { NotificationController } from "../controllers/notifications.js";
 
-export const createMessagesEvents = ({ io, chatModel, socketModel }) => {
+export const createMessagesEvents = ({ io, chatModel, socketModel, notificationModel }) => {
     const chatController = new ChatController({ chatModel: chatModel });
     const socketController = new SocketsController({ socketModel: socketModel });
     const notificationController = new NotificationController({ notificationModel: notificationModel });

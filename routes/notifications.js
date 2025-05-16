@@ -7,7 +7,7 @@ export const createNotificationRouter = ({ notificationModel }) => {
     const notificationController = new NotificationController({ notificationModel });   
 
     notificationRouter.get("/:id", notificationController.getById);
-    notificationRouter.post("/:id", notificationController.create);
+    notificationRouter.post("/", notificationController.create);
 
     return notificationRouter;
 }
