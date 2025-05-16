@@ -6,3 +6,4 @@ export { MessagesModel } from './messages.js';
 export { SocketsModel } from './sockets.js';
 export { MediaModel } from './media.js';
 export { ChatModel } from './chat.js';
+export { NotificationModel } from './notifications.js';

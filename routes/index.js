@@ -5,4 +5,5 @@ export { createAuthRouter } from './auth.js';
 export { createIncidenceRouter } from './incidences.js';
 export { createMediaRouter } from './media.js';
 export { createChatRouter } from './chat.js';
-export { createPaymentRouter } from './pay.js'
+export { createPaymentRouter } from './pay.js';
+export { createNotificationRouter } from './notifications.js';

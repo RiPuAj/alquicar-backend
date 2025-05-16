@@ -18,7 +18,8 @@ import {
   createAuthRouter,
   createIncidenceRouter,
   createChatRouter,
-  createPaymentRouter
+  createPaymentRouter,
+  createNotificationRouter
 } from './routes/index.js';
 
 import {
@@ -26,7 +27,8 @@ import {
   ReservationModel,
   VehicleModel,
   IncidenceModel,
-  ChatModel
+  ChatModel,
+  NotificationModel
 } from './models/mysql/index.js';
 import { corsMiddlewares } from './middlewares/cors.js';
 import { create } from 'domain';
@@ -48,6 +50,7 @@ app.use('/media', createMediaRouter({ mediaModel: MediaModel}));
 app.use('/incidences', createIncidenceRouter({ incidenceModel: IncidenceModel }))
 app.use('/chats', createChatRouter({ chatModel: ChatModel }));
 app.use('/pay', createPaymentRouter());
+app.use('/notifications', createNotificationRouter({ notificationModel: NotificationModel }));
 
 app.use((req, res) => {
   res.status(404).send('<h1>404 Not Found</h1>');
