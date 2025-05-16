@@ -1,6 +1,7 @@
 import { handlerDatabaseError } from '../../errors/handler-error.js';
 import { CreateMYSQLConnection } from './connectionCreater.js';
 import fs from 'fs'
+import path from 'path';
 import { promisify } from 'util';
 
 
@@ -29,6 +30,44 @@ export class MediaModel{
             handlerDatabaseError({error: e});
         }
         
+    }
+    static async deleteImage({ uuid, vehicle_id }) {
+        try {
+            const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id = ?`;
+            const res = await conn.query(qry, vehicle_id);
+            if (res.length > 0) {
+                const imagePath = res[0].URL;
+                const fullPath = path.resolve(imagePath);
+                await fs.unlink(fullPath);
+                console.log(`Imagen eliminada: ${fullPath}`);
+                const deleteQry = `DELETE FROM \`${uuid}\` WHERE vehicle_id = ?`;
+                await conn.query(deleteQry, vehicle_id);
+                return { success: true, message: 'Imagen eliminada' };
+            }
+            
+        }catch(e){
+            console.log(e);
+            handlerDatabaseError({error: e});
+        }
+    }
+    static async deleteProfileImage({ uuid }) {
+        try {
+            const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id = null`;
+            const res = await conn.query(qry, vehicle_id);
+            if (res.length > 0) {
+                const imagePath = res[0].URL;
+                const fullPath = path.resolve(imagePath);
+                await fs.unlink(fullPath);
+                console.log(`Imagen eliminada: ${fullPath}`);
+                const deleteQry = `DELETE FROM \`${uuid}\` WHERE vehicle_id = ?`;
+                await conn.query(deleteQry, vehicle_id);
+                return { success: true, message: 'Imagen eliminada' };
+            }
+            
+        }catch(e){
+            console.log(e);
+            handlerDatabaseError({error: e});
+        }
     }
     static async saveImagePath({ uuid, imagePath, vehicle_id = null }) {
         try {
