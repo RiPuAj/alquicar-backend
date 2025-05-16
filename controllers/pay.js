@@ -5,7 +5,7 @@ import { UserModel } from '../models/mysql/users.js';
 export class PayController {
     
     pay = async (req, res) => {
-        const { reservationid } = req.body;
+        const { reservationid, apiurl } = req.body;
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
         try {
         const reservation = await ReservationModel.getById({ id: reservationid });
@@ -28,8 +28,8 @@ export class PayController {
                     },  
                 ],
                 mode: 'payment',
-                success_url: 'http://localhost:8081/success',
-                cancel_url: 'http://localhost:8081/cancel',
+                success_url: `${apiurl}/pagoExitoso`,
+                cancel_url: `${apiurl}/pagoFallido`,
             });
             console.log('Session created:', session);
 
