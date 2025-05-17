@@ -5,12 +5,17 @@ GET http://localhost:3000/users
 POST http://localhost:3000/vehicles/
 
 ###
+GET http://localhost:3000/notifications/123e4567-e89b-12d3-a456-426614174000
+
+###
 POST http://localhost:3000/notifications/
 Content-Type: application/json
 
 {
   "user_id": "123e4567-e89b-12d3-a456-426614174000",
-  "type": "Reservation"
+  "type": "Reservation",
+  "content": "Your reservation has been confirmed",
+  "seen": false
 }
 
 ###

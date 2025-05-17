@@ -11,7 +11,7 @@ export class NotificationModel {
         try {
 
             const [notifications, tableInfo] = await conn.query(
-                'SELECT *, BIN_TO_UUID(user_id) AS user_id FROM notifications WHERE user_id = UUID_TO_BIN(?)', [id]);
+                'SELECT *, BIN_TO_UUID(user_id) AS user_id FROM notifications WHERE user_id = UUID_TO_BIN(?) AND seen = false', [id]);
             return notifications;
 
         } catch (e) {
@@ -27,15 +27,18 @@ export class NotificationModel {
 
         const {
             user_id,
-            type
+            type, 
+            content,
+            seen, 
+            created_at
         } = input;
 
         try {
             
 
             const [result] = await conn.query(
-                'INSERT INTO notifications (user_id, type) VALUES (UUID_TO_BIN(?), ?)',
-                [user_id, type]
+                'INSERT INTO notifications (user_id, type, content, seen, created_at) VALUES (UUID_TO_BIN(?), ?, ?, ?, ?)',
+                [user_id, type, content, seen, created_at]
             );
 
     
@@ -44,6 +47,7 @@ export class NotificationModel {
         } catch (e) {
 
             console.log(e);
+            return { success: false, message: 'Notification not added' };
         }
     }
 }
