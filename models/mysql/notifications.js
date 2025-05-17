@@ -17,7 +17,7 @@ export class NotificationModel {
         } catch (e) {
             // TODO Manejar error
             console.log(e);
-            throw new DatabaseError('Error getting notifications');
+            return { success: false, message: 'Notifications not found' };
         }
 
 
@@ -57,7 +57,6 @@ export class NotificationModel {
             const query = `INSERT INTO notifications (${fields.join(", ")}) VALUES (${values.join(", ")})`;
             const [newNotification] = await conn.query(query, params);
 
-    
             return { success: true, message: 'Notification added', notification: newNotification };
 
         } catch (e) {

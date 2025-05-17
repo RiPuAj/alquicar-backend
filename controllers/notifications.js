@@ -9,9 +9,9 @@ export class NotificationController {
         try {
             const notifications = await this.notificationModel.getById({ id });
             if (notifications.length === 0) {
-                return {error: JSON.parse('User notifications not found')};
+                return { success: false, error: notifications.message };
             }
-            return JSON.parse(notifications);
+            return { success: true, notification: JSON.parse(notifications) };
         } catch (e) {
             throw new Error('Error getting notifications');
         }
@@ -22,26 +22,26 @@ export class NotificationController {
     create = async ({ input }) => {
         const notification = validateNotification(input);
         if (!notification.success) {
-            return {error: JSON.parse(notification.message)};
+            return { success: false, error: notification.error };
         }
         const newNotification = await this.notificationModel.create({ input: notification.data });
         if (!newNotification.success) {
-            return {error: JSON.parse(newNotification.message)};
+            return { success: false, error: newNotification.message };
         }
-        return JSON.parse(newNotification);
+        return { success: true, notification: newNotification.notification };
 
     }
 
     update = async ({ id, input }) => {
         const notification = validatePartialNotification(input);
         if (!notification.success) {
-            return {error: JSON.parse(notification.message)};
+            return { success: false, error: notification.message };
         }
         const updatedNotification = await this.notificationModel.update({ id, input: notification.data });
         if (!updatedNotification.success) {
-            return { error: JSON.parse(updatedNotification.message) };
+            return { success: false, error: notification.message };
         }
-        return JSON.parse(updatedNotification);
+        return { success: true, notification: updatedNotification.notification };
     }
 
 }

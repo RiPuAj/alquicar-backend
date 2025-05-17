@@ -26,7 +26,8 @@ import {
   ReservationModel,
   VehicleModel,
   IncidenceModel,
-  ChatModel
+  ChatModel,
+  NotificationModel
 } from './models/mysql/index.js';
 import { corsMiddlewares } from './middlewares/cors.js';
 import { create } from 'domain';
@@ -60,7 +61,7 @@ const server = http.createServer(app);
 const io = WebSocketServerCreator.createConnection({ server });
 io.use(authMiddlewareSocket);
 createSocketEvents({ io, socketModel: SocketsModel });
-createMessagesEvents({ io, chatModel: ChatModel, socketModel: SocketsModel });
+createMessagesEvents({ io, chatModel: ChatModel, socketModel: SocketsModel, notificationModel: NotificationModel });
 
 server.listen(process.env.PORT, () => {
   console.log(`Servidor HTTPS activo en http://localhost:${process.env.PORT}`);

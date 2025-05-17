@@ -34,6 +34,20 @@ export const createMessagesEvents = ({ io, chatModel, socketModel, notificationM
                 io.to(socket.socket_id).emit("new message",
                     message
                 );
+
+                const notificationInput = {
+                    user_id: newMessage.to_id,
+                    type:    "Message",
+                    content: `Tienes un nuevo mensaje de ${newMessage.from_id}`
+                };
+
+                const notifResult = await notificationController.create({ input: notificationInput });
+
+                if (notifResult.error) {
+                    console.error("Error creando notificación:", notifResult.error);
+                } else {
+                    io.to(socket.socket_id).emit("new notification", notifResult.notification);
+                }
             } catch (error) {
                 console.log(error);
                 socket.emit("error", { error: "Error al enviar el mensaje" });
