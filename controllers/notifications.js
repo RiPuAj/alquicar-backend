@@ -34,4 +34,17 @@ export class NotificationController {
 
     }
 
+    update = async (req, res) => {
+        const { id } = req.params;
+        const notification = validatePartialNotification(req.body);
+        if (!notification.success) {
+            return res.status(400).json({ error: JSON.parse(notification.error.message) });
+        }
+        const updatedNotification = await this.notificationModel.update({ id, input: notification.data });
+        if (!updatedNotification.success) {
+            return res.status(400).json({ error: updatedNotification.message });
+        }
+        res.json(updatedNotification);
+    }
+
 }

@@ -8,6 +8,7 @@ export const createNotificationRouter = ({ notificationModel }) => {
 
     notificationRouter.get("/:id", notificationController.getById);
     notificationRouter.post("/", notificationController.create);
+    notificationRouter.patch("/:id", notificationController.update);
 
     return notificationRouter;
 }
