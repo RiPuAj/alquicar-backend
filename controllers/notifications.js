@@ -7,7 +7,20 @@ export class NotificationController {
 
     getById = async ({ id }) => {
         try {
-            const notifications = await this.notificationModel.getById({ id });
+            const notification = await this.notificationModel.getById({ id });
+            if (notification.length === 0) {
+                return { success: false, error: notification.message };
+            }
+            return { success: true, notification: JSON.parse(notification) };
+        } catch (e) {
+            throw new Error('Error getting notifications');
+        }
+        
+    }
+
+    getUserNotifications = async ({ id }) => {
+        try {
+            const notifications = await this.notificationModel.getUserNotifications({ id });
             if (notifications.length === 0) {
                 return { success: false, error: notifications.message };
             }

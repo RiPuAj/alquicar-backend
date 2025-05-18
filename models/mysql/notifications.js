@@ -6,7 +6,25 @@ const conn = await CreateMYSQLConnection.getConncetion();
 
 
 export class NotificationModel {
+
     static async getById({ id }) {
+
+        try {
+
+            const [notification, tableInfo] = await conn.query(
+                'SELECT *, BIN_TO_UUID(user_id) AS user_id FROM notifications WHERE id = ?', [id]);
+            return notification;
+
+        } catch (e) {
+            // TODO Manejar error
+            console.log(e);
+            return { success: false, message: 'Notification not found' };
+        }
+
+
+    }
+
+    static async getUserNotifications({ id }) {
 
         try {
 
@@ -56,8 +74,9 @@ export class NotificationModel {
 
             const query = `INSERT INTO notifications (${fields.join(", ")}) VALUES (${values.join(", ")})`;
             const [newNotification] = await conn.query(query, params);
+            const result = await this.getById({ id: newNotification.insertId });
 
-            return { success: true, message: 'Notification added', notification: newNotification };
+            return { success: true, message: 'Notification added', notification: result };
 
         } catch (e) {
 

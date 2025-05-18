@@ -38,7 +38,7 @@ export const createMessagesEvents = ({ io, chatModel, socketModel, notificationM
                 const notificationInput = {
                     user_id: newMessage.to_id,
                     type:    "Message",
-                    content: `Tienes un nuevo mensaje de ${newMessage.from_id}`
+                    content: `Tienes un nuevo mensaje`
                 };
 
                 const notifResult = await notificationController.create({ input: notificationInput });
