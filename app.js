@@ -10,6 +10,7 @@ import { SocketsModel } from './models/mysql/sockets.js';
 import { authMiddlewareSocket } from './middlewares/auth.js';
 import { createMessagesEvents } from './sockets/messagesEvents.js';
 import { MessagesModel } from './models/mysql/messages.js';
+import { createNotificationsEvents } from './sockets/notificationsEvents.js';
 
 import {
   createUserRouter,
@@ -62,6 +63,7 @@ const io = WebSocketServerCreator.createConnection({ server });
 io.use(authMiddlewareSocket);
 createSocketEvents({ io, socketModel: SocketsModel });
 createMessagesEvents({ io, chatModel: ChatModel, socketModel: SocketsModel, notificationModel: NotificationModel });
+createNotificationsEvents({ io, socketModel: SocketsModel, notificationModel: NotificationModel });
 
 server.listen(process.env.PORT, () => {
   console.log(`Servidor HTTPS activo en http://localhost:${process.env.PORT}`);
