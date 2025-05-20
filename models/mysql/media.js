@@ -1,6 +1,7 @@
 import { handlerDatabaseError } from '../../errors/handler-error.js';
 import { CreateMYSQLConnection } from './connectionCreater.js';
 import fs from 'fs'
+import { promises as pf } from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 
@@ -33,12 +34,16 @@ export class MediaModel{
     }
     static async deleteImage({ uuid, vehicle_id }) {
         try {
+
             const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id = ?`;
             const res = await conn.query(qry, vehicle_id);
+            console.log('Ruta de la imagen:', res);
             if (res.length > 0) {
-                const imagePath = res[0].URL;
+                const imagePath = res[0][0].URL;
+                console.log('Ruta de la imagen:', imagePath);
                 const fullPath = path.resolve(imagePath);
-                await fs.unlink(fullPath);
+                console.log('Ruta completa de la imagen:', fullPath);
+                await pf.unlink(imagePath);
                 console.log(`Imagen eliminada: ${fullPath}`);
                 const deleteQry = `DELETE FROM \`${uuid}\` WHERE vehicle_id = ?`;
                 await conn.query(deleteQry, vehicle_id);
@@ -54,10 +59,11 @@ export class MediaModel{
         try {
             const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id = null`;
             const res = await conn.query(qry, vehicle_id);
+            
             if (res.length > 0) {
-                const imagePath = res[0].URL;
+                const imagePath = res[0].url;
                 const fullPath = path.resolve(imagePath);
-                await fs.unlink(fullPath);
+                await pf.unlink(fullPath);
                 console.log(`Imagen eliminada: ${fullPath}`);
                 const deleteQry = `DELETE FROM \`${uuid}\` WHERE vehicle_id = ?`;
                 await conn.query(deleteQry, vehicle_id);

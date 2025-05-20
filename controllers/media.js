@@ -41,6 +41,8 @@ export class MediaController {
 	modifyImage = async (req, res) => {
 		try {
 			const { uuid, vehicle_id } = req.params;
+			console.log('UUID:', uuid);
+			console.log('Vehicle ID:', vehicle_id);
 			const filename = req.generatedFilename;
 			const imagePath = `assets/${uuid}/${filename}`;
 
