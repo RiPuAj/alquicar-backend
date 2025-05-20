@@ -93,7 +93,9 @@ export class MediaModel{
         try {
             const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id = ?`;
             const [rows] = await conn.query(qry, [vehicle_id]);
-
+            if (rows.length === 0) {
+                return null;
+            }
             const images = await Promise.all(rows.map(async ({ URL }) => {
                 try {
                     const buffer = await fs.promises.readFile(URL); // Usar `fs.promises.readFile` para promesas
