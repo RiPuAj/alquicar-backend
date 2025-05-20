@@ -6,7 +6,7 @@ export const createSocketEvents = ({ io, socketModel }) => {
 
 
     io.on("connection", (socket) => {
-        console.log('Nuevo cliente conectado:', socket.id);
+        console.log('Nuevo cliente conectado:', socket.id, socket.user_info.id);
     
         socketController.create({user_id: socket.user_info.id, socket_id: socket.id});
 

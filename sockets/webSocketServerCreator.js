@@ -7,7 +7,6 @@ export class WebSocketServerCreator {
     static webSocketServer = null;
 
     static createConnection({server}) {
-        console.log(this.webSocketServer)
         if (!this.webSocketServer) {
             this.webSocketServer = new Server(server,{
                 cors: {
