@@ -9,7 +9,7 @@ export const createNotificationsEvents = ({ io, socketModel, notificationModel }
 
         socket.on("get notifications", async () => {
             io.to(socket.id).emit("get notifications", {
-                notifications: await notificationController.getById({ id: socket.user_info.id })
+                notifications: await notificationController.getUserNotifications({ id: socket.user_info.id })
             });
         });
 
