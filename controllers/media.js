@@ -57,6 +57,25 @@ export class MediaController {
 		}
 	}
 
+	modifyProfileImage = async (req, res) => {
+		try {
+			const { uuid } = req.params;
+			const filename = req.generatedFilename;
+			const imagePath = `assets/${uuid}/${filename}`;
+
+			let resp = await this.mediaModel.deleteProfileImage({ uuid });
+			if (!resp.success) {
+				return res.status(404).json({ error: 'Imagen no encontrada' });
+			}
+			resp = await this.mediaModel.saveImagePath({ uuid, imagePath });
+
+			return res.status(200).json({ message: 'Imagen modificada', data: resp });
+		} catch (e) {
+			console.error(e);
+			return res.status(500).json({ error: 'Error al modificar la imagen' });
+		}
+	}
+
 
 	getProfileImagesBase64 = async (req, res) => {
 		try {
