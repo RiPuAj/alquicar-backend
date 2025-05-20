@@ -12,6 +12,7 @@ export const createMediaRouter = ({ mediaModel }) => {
     mediaRouter.post('/upload/:uuid/:vehicle_id', upload.single('image'), mediaController.upload);
     mediaRouter.get('/profile/:uuid', mediaController.getProfileImagesBase64);
     mediaRouter.get('/vehicles/:uuid/:vehicle_id', mediaController.getVehicleImagesBase64);
-
+    mediaRouter.patch('/modify/:uuid/:vehicle_id', upload.single('image'), mediaController.modifyImage);
+     mediaRouter.patch('/modify/:uuid', upload.single('image'), mediaController.modifyProfileImage);
     return mediaRouter;
 }
