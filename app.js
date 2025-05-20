@@ -62,7 +62,7 @@ const server = http.createServer(app);
 const io = WebSocketServerCreator.createConnection({ server });
 io.use(authMiddlewareSocket);
 createSocketEvents({ io, socketModel: SocketsModel });
-createMessagesEvents({ io, chatModel: ChatModel, socketModel: SocketsModel, notificationModel: NotificationModel });
+createMessagesEvents({ io, chatModel: ChatModel, socketModel: SocketsModel, notificationModel: NotificationModel, userModel: UserModel });
 createNotificationsEvents({ io, socketModel: SocketsModel, notificationModel: NotificationModel });
 
 server.listen(process.env.PORT, () => {

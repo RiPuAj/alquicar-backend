@@ -49,6 +49,13 @@ export class NotificationModel {
             content
         } = input;
 
+        
+
+        const userName = await conn.query(
+            'SELECT name FROM users WHERE id = UUID_TO_BIN(?)', [user_id])
+        
+        const finalContent = `${content} ${userName[0][0].name}`;
+
         const optionalFields = ["seen", "created_at"];
         const fields = [
             "user_id", "type", "content"
@@ -57,7 +64,7 @@ export class NotificationModel {
             "UUID_TO_BIN(?)", "?", "?"
         ];
         const params = [
-            user_id, type, content
+            user_id, type, finalContent
         ];
 
         // Agregar los campos opcionales solo si están definidos
@@ -76,7 +83,7 @@ export class NotificationModel {
             const [newNotification] = await conn.query(query, params);
             const result = await this.getById({ id: newNotification.insertId });
 
-            return { success: true, message: 'Notification added', notification: result };
+            return { success: true, message: 'Notification added', notification: result, creator: userName[0][0].name };
 
         } catch (e) {
 

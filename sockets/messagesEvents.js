@@ -1,11 +1,13 @@
 import { ChatController } from "../controllers/chat.js";
 import { SocketsController } from "../controllers/socket.js";
 import { NotificationController } from "../controllers/notifications.js";
+import { UserController } from "../controllers/users.js";
 
-export const createMessagesEvents = ({ io, chatModel, socketModel, notificationModel }) => {
+export const createMessagesEvents = ({ io, chatModel, socketModel, notificationModel, userModel }) => {
     const chatController = new ChatController({ chatModel: chatModel });
     const socketController = new SocketsController({ socketModel: socketModel });
     const notificationController = new NotificationController({ notificationModel: notificationModel });
+    const userController = new UserController({ userModel: userModel });
 
     io.on("connection", (socket) => {
 
@@ -38,11 +40,11 @@ export const createMessagesEvents = ({ io, chatModel, socketModel, notificationM
                 const notificationInput = {
                     user_id: newMessage.to_id,
                     type:    "Message",
-                    content: `Tienes un nuevo mensaje`
+                    content: `Tienes un nuevo mensaje de`
                 };
 
                 const notifResult = await notificationController.create({ input: notificationInput });
-
+                
                 if (notifResult.error) {
                     console.error("Error creando notificación:", notifResult.error);
                 } else {

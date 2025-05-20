@@ -41,7 +41,8 @@ export class NotificationController {
         if (!newNotification.success) {
             return { success: false, error: newNotification.message };
         }
-        return { success: true, notification: newNotification.notification };
+        console.log(newNotification.creator);
+        return { success: true, notification: newNotification.notification, creator: newNotification.creator };
 
     }
 
