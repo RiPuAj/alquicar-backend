@@ -83,6 +83,9 @@ export class MediaController {
 		try {
 			const { uuid } = req.params;
 			const images = await this.mediaModel.getProfileImagesBase64({ uuid });
+			if (!images) {
+				return res.status(404).json({ error: 'No se encontraron imágenes para este vehículo' });
+			}
 			return res.json(images);
 		} catch (e) {
 			console.error(e);
