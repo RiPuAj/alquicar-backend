@@ -129,6 +129,9 @@ export class MediaModel{
         try {
             const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id IS NULL`;
             const [rows] = await conn.query(qry);
+            if (rows.length === 0) {
+                return null;
+            }
             return rows;
         } catch (e) {
             console.error(e);
