@@ -29,7 +29,8 @@ export class NotificationModel {
         try {
 
             const [notifications, tableInfo] = await conn.query(
-                'SELECT *, BIN_TO_UUID(user_id) AS user_id FROM notifications WHERE user_id = UUID_TO_BIN(?) AND seen = false', [id]);
+                'SELECT *, BIN_TO_UUID(user_id) AS user_id FROM notifications WHERE user_id = UUID_TO_BIN(?)', [id]);
+            console.log(notifications, id);
             return notifications;
 
         } catch (e) {
@@ -44,6 +45,7 @@ export class NotificationModel {
     static async create({ input }) {
 
         const {
+            from_id,
             user_id,
             type, 
             content
@@ -52,7 +54,7 @@ export class NotificationModel {
         
 
         const userName = await conn.query(
-            'SELECT name FROM users WHERE id = UUID_TO_BIN(?)', [user_id])
+            'SELECT name FROM users WHERE id = UUID_TO_BIN(?)', [from_id])
         
         const finalContent = `${content} ${userName[0][0].name}`;
 
@@ -116,6 +118,7 @@ export class NotificationModel {
                     message: 'No notification found with the given ID'
                 };
             }
+            console.log(result);
             return { success: true, message: 'Notification updated', notification: result };
         }catch(e){
             console.log(e);

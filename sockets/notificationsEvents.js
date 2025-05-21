@@ -8,15 +8,19 @@ export const createNotificationsEvents = ({ io, socketModel, notificationModel }
     io.on("connection", (socket) => {
 
         socket.on("get notifications", async () => {
+            console.log("get notifications", await notificationController.getUserNotifications({ id: socket.user_info.id }));
             io.to(socket.id).emit("get notifications", {
                 notifications: await notificationController.getUserNotifications({ id: socket.user_info.id })
             });
         });
 
         socket.on("read notification", async (data) => {
-            io.to(socket.id).emit("read notification", {
+            data.notifications.map(async (notification)=>{
+                await notificationController.update({ id: notification.id, input: { seen: true } });
+            })
+            /*io.to(socket.id).emit("read notification", {
                 notifications: await notificationController.update({ id: data.id, input: { seen: true } })
-            });
+            });*/
         });
 
     });

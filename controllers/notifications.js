@@ -13,6 +13,7 @@ export class NotificationController {
             }
             return { success: true, notification: JSON.parse(notification) };
         } catch (e) {
+            console.log(e);
             throw new Error('Error getting notifications');
         }
         
@@ -21,10 +22,7 @@ export class NotificationController {
     getUserNotifications = async ({ id }) => {
         try {
             const notifications = await this.notificationModel.getUserNotifications({ id });
-            if (notifications.length === 0) {
-                return { success: false, error: notifications.message };
-            }
-            return { success: true, notification: JSON.parse(notifications) };
+            return notifications;
         } catch (e) {
             throw new Error('Error getting notifications');
         }

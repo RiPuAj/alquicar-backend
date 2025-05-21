@@ -2,6 +2,7 @@ import z from 'zod';
 
 const notificationsSchema = z.object({
     user_id: z.string().uuid({ required_error: "A user id must be entered", invalid_type_error: "Invalid UUID format for user_id" }),
+    from_id: z.string().uuid({invalid_type_error: "Invalid UUID format for from_id" }).optional(),
     type: z.enum(['Reservation', 'Incidence', 'Message'], 
         {required_error: "A notification type is required", 
         invalid_type_error: "Invalid type. Must be one of: Reservation, Incidence, Message", 
