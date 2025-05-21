@@ -57,15 +57,15 @@ export class MediaModel{
     }
     static async deleteProfileImage({ uuid }) {
         try {
-            const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id = null`;
+            const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id IS NULL`;
             const res = await conn.query(qry);
             
             if (res.length > 0) {
-                const imagePath = res[0][0].url;
+                const imagePath = res[0][0].URL;
                 const fullPath = path.resolve(imagePath);
                 await pf.unlink(imagePath);
                 console.log(`Imagen eliminada: ${fullPath}`);
-                const deleteQry = `DELETE FROM \`${uuid}\` WHERE vehicle_id = null`;
+                const deleteQry = `DELETE FROM \`${uuid}\` WHERE vehicle_id IS NULL`;
                 await conn.query(deleteQry);
                 return { success: true, message: 'Imagen eliminada' };
             }
