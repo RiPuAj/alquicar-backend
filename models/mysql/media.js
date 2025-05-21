@@ -143,7 +143,9 @@ static async getProfileImagesBase64({ uuid }) {
     try {
         const qry = `SELECT URL FROM \`${uuid}\` WHERE vehicle_id IS NULL`;
         const [rows] = await conn.query(qry);
-
+        if (rows.length === 0) {
+                return null;
+            }
         const images = await Promise.all(rows.map(async ({ URL }) => {
             try {
                 const buffer = await readFile(URL);
