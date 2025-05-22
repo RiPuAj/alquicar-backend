@@ -1,10 +1,12 @@
 import{ validateIncidence, validatePartialIncidence } from '../schemas/incidences.js';
 import { getTokenInfo } from '../utils/tokens.js';
+import { NotificationController } from './notifications.js';
 
 export class IncidenceController {
     
-    constructor({incidenceModel}) {
+    constructor({incidenceModel, notificationModel}) {
         this.incidenceModel = incidenceModel;
+        this.notificationController = new NotificationController({ notificationModel: notificationModel });
     }
 
     getAll = async (req, res) => {
@@ -14,9 +16,7 @@ export class IncidenceController {
             return res.json(allIncidences);
         } catch (e) {
             return res.status(500).json({ error: e.message });
-            /*if (e instanceof DatabaseError) {
-                return res.status(500).json({ error: e.message });
-            }*/
+
         }
     }
 
@@ -45,10 +45,7 @@ export class IncidenceController {
             return res.json(incidence);
         } catch (e) {
             return res.status(500).json({ error: e.message });
-            /*
-            if (e instanceof DatabaseError) {
-                return res.status(500).json({ error: e.message });
-            }*/
+
         }
         
     }
@@ -78,6 +75,7 @@ export class IncidenceController {
         if (!updatedIncidence.success) {
             return res.status(400).json({ error: updatedIncidence.message });
         }
+        this.notificationController.createFromUpdatingIncidence({input: updatedIncidence});
         res.json(updatedIncidence);
     }
 

@@ -10,14 +10,13 @@ const conn = await CreateMYSQLConnection.getConncetion();
 export class ChatModel {
 
     static async getAllMyChatsAsCustomer({ id }) {
-        const query = `SELECT BIN_TO_UUID(v.owner_id) as contact_id, u.name AS contact_name 
+        const query = `SELECT DISTINCT BIN_TO_UUID(v.owner_id) as contact_id, u.name AS contact_name 
         FROM reservations r 
         JOIN vehicles v ON v.id = r.vehicle_id
         JOIN users u ON u.id = v.owner_id
         WHERE BIN_TO_UUID(r.customer_id) = ?;`;
         try {
             const [contacts] = await conn.query(query, [id]);
-
 
             const chatsWithMessages = await Promise.all(contacts.map(async (contact) => {
                 const messages = await this.getMessagesFromChat({ id, contact_id: contact.contact_id });
@@ -37,7 +36,7 @@ export class ChatModel {
 
     static async getAllMyChatsAsOwner({ id }) {
 
-        const query = `SELECT BIN_TO_UUID(r.customer_id) as contact_id, u.name AS contact_name
+        const query = `SELECT DISTINCT BIN_TO_UUID(r.customer_id) as contact_id, u.name AS contact_name
         FROM reservations r
         JOIN vehicles v ON v.id = r.vehicle_id
         JOIN users u ON u.id = r.customer_id
@@ -70,6 +69,7 @@ export class ChatModel {
             WHERE (m.from_id = UUID_TO_BIN(?) AND m.to_id = UUID_TO_BIN(?)) OR (m.from_id = UUID_TO_BIN(?) AND m.to_id = UUID_TO_BIN(?))
             ORDER BY m.created_at ASC;`;
 
+            
         try {
             const [result] = await conn.query(query, [contact_id, id, id, contact_id]);
             return result;

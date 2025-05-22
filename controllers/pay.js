@@ -31,7 +31,7 @@ export class PayController {
                 success_url: 'http://localhost:8081/success',
                 cancel_url: 'http://localhost:8081/cancel',
             });
-            console.log('Session created:', session);
+            //console.log('Session created:', session);
 
             return res.status(200).json({ url: session.url });
 
