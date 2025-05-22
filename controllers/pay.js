@@ -2,10 +2,11 @@ import Stripe from 'stripe';
 import { ReservationModel } from '../models/mysql/reservations.js';
 import { VehicleModel } from '../models/mysql/vehicle.js';
 import { UserModel } from '../models/mysql/users.js'; 
+import { MediaModel } from '../models/mysql/media.js';
 export class PayController {
     
     pay = async (req, res) => {
-        const { reservationid, apiurl } = req.body;
+        const { reservationid, apiurl, pc } = req.body;
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
         try {
         const reservation = await ReservationModel.getById({ id: reservationid });
@@ -28,16 +29,28 @@ export class PayController {
                     },  
                 ],
                 mode: 'payment',
-                success_url: `${apiurl}/pagoExitoso`,
-                cancel_url: `${apiurl}/pagoFallido`,
+                success_url: `${apiurl}/pay/success/${reservationid}/${pc}`,
+                cancel_url: `${apiurl}/pay/pagoFallido/${reservationid}`,
             });
             console.log('Session created:', session);
-
+        
             return res.status(200).json({ url: session.url });
 
         } catch (err) {
             console.error('Error al crear la sesión de pago:', err);
             return res.status(500).json({ error: 'Error al crear la sesión de pago' });
         }
+    }
+
+    succes = async (req, res) => {
+        const { id, pc } = req.params;
+        const input = {
+                status: 'Confirmed',
+            }
+        await ReservationModel.update({ id: id, input });
+        if (pc === 'true') {
+            return res.redirect('http://localhost:8081/pagoExitoso');
+        }
+        return res.redirect('alquicar://pagoExitoso');
     }
 }
