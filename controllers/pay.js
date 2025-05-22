@@ -31,6 +31,10 @@ export class PayController {
                 success_url: `${apiurl}/pagoExitoso`,
                 cancel_url: `${apiurl}/pagoFallido`,
             });
+            const input = {
+                status: 'Confirmed',
+            }
+            await ReservationModel.update({ id: reservationid, input });
             console.log('Session created:', session);
 
             return res.status(200).json({ url: session.url });
