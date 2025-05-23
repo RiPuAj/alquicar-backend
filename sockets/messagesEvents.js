@@ -1,9 +1,13 @@
 import { ChatController } from "../controllers/chat.js";
 import { SocketsController } from "../controllers/socket.js";
+import { NotificationController } from "../controllers/notifications.js";
+import { UserController } from "../controllers/users.js";
 
-export const createMessagesEvents = ({ io, chatModel, socketModel }) => {
+export const createMessagesEvents = ({ io, chatModel, socketModel, notificationModel, userModel }) => {
     const chatController = new ChatController({ chatModel: chatModel });
     const socketController = new SocketsController({ socketModel: socketModel });
+    const notificationController = new NotificationController({ notificationModel: notificationModel });
+    const userController = new UserController({ userModel: userModel });
 
     io.on("connection", (socket) => {
 
@@ -32,6 +36,21 @@ export const createMessagesEvents = ({ io, chatModel, socketModel }) => {
                 io.to(socket.socket_id).emit("new message",
                     message
                 );
+
+                const notificationInput = {
+                    from_id: newMessage.from_id,
+                    user_id: newMessage.to_id,
+                    type:    "Message",
+                    content: `Tienes un nuevo mensaje de`
+                };
+
+                const notifResult = await notificationController.create({ input: notificationInput });
+                
+                if (notifResult.error) {
+                    console.error("Error creando notificación:", notifResult.error);
+                } else {
+                    io.to(socket.socket_id).emit("new notification", notifResult.notification);
+                }
             } catch (error) {
                 console.log(error);
                 socket.emit("error", { error: "Error al enviar el mensaje" });

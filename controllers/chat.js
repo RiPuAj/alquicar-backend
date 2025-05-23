@@ -4,11 +4,17 @@ export class ChatController {
         this.chatModel = chatModel;
     }
 
-    getAllMyChats = async ({id }) => {
+    getAllMyChats = async ({ id }) => {
         try {
             const chatsAsCustomer = await this.chatModel.getAllMyChatsAsCustomer({ id: id });
             const chatsAsOwner = await this.chatModel.getAllMyChatsAsOwner({ id: id });
-            const chats = [...chatsAsCustomer, ...chatsAsOwner];
+            //const chats = [...chatsAsCustomer, ...chatsAsOwner];
+
+            const uniqueOwner = chatsAsOwner.filter(
+                o => !chatsAsCustomer.some(c => c.contact_id === o.contact_id)
+            );
+            const chats = [...chatsAsCustomer, ...uniqueOwner];
+
             return chats;
         } catch (error) {
             //TODO Manejar error
@@ -19,7 +25,7 @@ export class ChatController {
 
     createMessage = async ({ newMessage }) => {
         try {
-            const response = await this.chatModel.createMessage({newMessage});
+            const response = await this.chatModel.createMessage({ newMessage });
             return response;
 
         } catch (error) {

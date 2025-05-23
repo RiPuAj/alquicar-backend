@@ -11,7 +11,7 @@ export class IncidenceModel {
 
         try {
             const [incidences, tableInfo] = await conn.query('SELECT *, BIN_TO_UUID(from_id) AS from_id, BIN_TO_UUID(to_id) AS to_id FROM incidences');
-            
+
             return incidences;
 
         } catch (e) {
@@ -52,9 +52,9 @@ export class IncidenceModel {
                 };
             }
 
-            if(incidence[0].from_id === requester.id || incidence[0].to_id === requester.id || requester.role === 'admin'){
+            if (incidence[0].from_id === requester.id || incidence[0].to_id === requester.id || requester.role === 'admin') {
                 return incidence;
-            }else{
+            } else {
                 return {
                     success: false,
                     message: 'Permiso denegado, debes ser administrador o parte de la incidencia'
@@ -85,17 +85,17 @@ export class IncidenceModel {
             status,
             created_at
         } = input;
-        
-        
+
+
         const { id: issuerId } = issuer;
-        if(reservation_id){
+        if (reservation_id) {
             const validation = await IncidenceModel.validateIssuer({ reservation_id, issuerId });
             if (!validation.success && issuer.role !== 'admin') {
                 return validation;
             }
         }
 
-        if(issuerId !== from_id && issuerId !== to_id && issuer.role !== 'admin'){
+        if (issuerId !== from_id && issuerId !== to_id && issuer.role !== 'admin') {
             return {
                 success: false,
                 message: 'Permission denied, you must be part of the reservation'
@@ -106,11 +106,11 @@ export class IncidenceModel {
         const fields = [
             "from_id", "description", "type", "status"
         ];
-        
+
         const values = [
             "UUID_TO_BIN(?)", "?", "?", "?"
         ];
-        
+
         const params = [
             from_id, description, type, status
         ];
@@ -133,9 +133,9 @@ export class IncidenceModel {
             const [newIncidence] = await conn.query(query, params);
 
             const id = newIncidence.insertId;
-            
-            const incidenceUpdated = await IncidenceModel.getById({id, requester: issuer});
-        
+
+            const incidenceUpdated = await IncidenceModel.getById({ id, requester: issuer });
+
             return { success: true, message: 'Incidence updated', incidence: incidenceUpdated };
 
         } catch (e) {
@@ -150,7 +150,7 @@ export class IncidenceModel {
     }
 
 
-    static async update({id, input, issuer}){
+    static async update({ id, input, issuer }) {
 
         const { id: issuerId } = issuer;
         const incidence = await IncidenceModel.getById({ id, requester: issuer });
@@ -162,8 +162,8 @@ export class IncidenceModel {
             };
         }
 
-    const { reservation_id } = incidence[0]
-        
+        const { reservation_id } = incidence[0]
+
 
         const fields = Object.keys(input).map(field => {
             if (field === "from_id" || field === "to_id") {
@@ -181,8 +181,8 @@ export class IncidenceModel {
                 message: 'No fields provided for update'
             };
         }
-    
-        try{
+
+        try {
             const [result] = await conn.query(
                 `UPDATE incidences SET ${fields.join(', ')} WHERE id = ?`, [...values, id]);
 
@@ -192,22 +192,22 @@ export class IncidenceModel {
                     message: 'No incidence found with the given ID'
                 };
             }
-        }catch(e){
+        } catch (e) {
             console.log(e);
             return {
                 success: false,
                 message: 'Error updating incidence'
             };
-                //handlerDatabaseError({err: {message: 'Error updating incidence'}});
+            //handlerDatabaseError({err: {message: 'Error updating incidence'}});
         }
-            
-        const incidenceUpdated = await IncidenceModel.getById({id, requester: issuer});
-        
+
+        const incidenceUpdated = await IncidenceModel.getById({ id, requester: issuer });
+
         return { success: true, message: 'Incidence updated', incidence: incidenceUpdated };
-        }
+    }
 
 
-    static async delete({id, requester}) {
+    static async delete({ id, requester }) {
         const incidence = await IncidenceModel.getById({ id, requester });
 
         if (!incidence || incidence.success === false) {
@@ -253,7 +253,7 @@ export class IncidenceModel {
     }
 
     static async validateIssuer({ reservation_id, issuerId }) {
-        
+
         try {
             const query = `
                 SELECT 
@@ -267,16 +267,16 @@ export class IncidenceModel {
                     r.id = ?;
             `;
             const [result] = await conn.query(query, [reservation_id]);
-    
+
             if (result.length === 0) {
                 return {
                     success: false,
                     message: 'Reservation not found'
                 };
             }
-    
+
             const { owner_id, customer_id } = result[0];
-    
+
             // Verificar si el issuer es el dueño o el cliente
             if (issuerId === owner_id || issuerId === customer_id) {
                 return { success: true };

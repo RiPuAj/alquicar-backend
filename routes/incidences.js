@@ -4,10 +4,10 @@ import { IncidenceController } from "../controllers/incidences.js";
 import { authMiddleware } from "../middlewares/auth.js";
 import { adminMiddleware, adminOrSelfMiddleware } from "../middlewares/admin.js";
 
-export const createIncidenceRouter = ({incidenceModel}) => {
+export const createIncidenceRouter = ({incidenceModel, notificationModel}) => {
 
     const incidenceRouter = Router();
-    const incidenceController = new IncidenceController({incidenceModel});
+    const incidenceController = new IncidenceController({incidenceModel, notificationModel});
 
     incidenceRouter.get("/", [authMiddleware, adminMiddleware], incidenceController.getAll);
     incidenceRouter.get("/my-incidences", incidenceController.getMyIncidences);

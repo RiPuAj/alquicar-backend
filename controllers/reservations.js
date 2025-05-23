@@ -6,11 +6,13 @@
 */
 import { getTokenInfo } from "../utils/tokens.js";
 import { catchAndResponseError } from "../errors/handler-error.js";
+import { NotificationController } from "./notifications.js";
 
 
 export class ReservationController {
-    constructor({ reservationModel }) {
+    constructor({ reservationModel, notificationsModel}) {
         this.reservationModel = reservationModel;
+        this.notificationController = new NotificationController({ notificationModel: notificationsModel });
     }
 
     getAll = async (req, res) => {
@@ -42,6 +44,7 @@ export class ReservationController {
         try {
 
             const reservationModel = await this.reservationModel.create({ input: req.body });
+            this.notificationController.createFromReservation({input: reservationModel})
             return res.json(reservationModel);
 
         } catch (error) {

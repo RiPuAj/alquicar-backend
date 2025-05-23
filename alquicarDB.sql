@@ -106,6 +106,16 @@ create table sockets (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE notifications(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id BINARY(16) NOT NULL,
+    type ENUM("Reservation", "Incidence", "Message") NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    seen BOOLEAN DEFAULT false,
+    created_at timestamp default NOW(),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Insertar usuarios
 
 INSERT INTO users (id, name, email, password, address, phone, role, dni, isVerified) 

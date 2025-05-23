@@ -18,4 +18,9 @@ export class WebSocketServerCreator {
         }
         return this.webSocketServer;
     }
+
+
+    static getConnection() {
+        return this.webSocketServer;
+    }
 }

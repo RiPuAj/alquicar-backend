@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { ReservationController } from '../controllers/reservations.js';
 
-export const createReservationRouter = ({ reservationModel }) => {
+export const createReservationRouter = ({ reservationModel, notificationsModel }) => {
 
     const reservationRouter = Router();
-    const reservationController = new ReservationController({ reservationModel });
+    const reservationController = new ReservationController({ reservationModel, notificationsModel });
 
     reservationRouter.get("/", reservationController.getAll);
     reservationRouter.get("/customer", reservationController.getMyReservations);
